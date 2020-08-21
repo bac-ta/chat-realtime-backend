@@ -11,7 +11,5 @@ services:
     expose:
       - "1234"
     restart: always
-    networks:
-      - chat-backend-app-network
     extra_hosts:
       - localhost:127.0.0.1
