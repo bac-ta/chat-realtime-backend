@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.dimagesharevn.chat-realtime</groupId>
-    <artifactId>backend-chat-realtime</artifactId>
+    <artifactId>chat-realtime-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>backend-chat-realtime</name>
+    <name>chat-realtime-backend</name>
     <description>Backend app api for realtime</description>
 
     <properties>
