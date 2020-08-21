@@ -1,0 +1,17 @@
+version: '3.3'
+
+services:
+  # App config
+  chat-backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1234:8080"
+    expose:
+      - "1234"
+    restart: always
+    networks:
+      - chat-backend-app-network
+    extra_hosts:
+      - localhost:127.0.0.1
