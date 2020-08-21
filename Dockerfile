@@ -1,4 +1,4 @@
 FROM java:8
-COPY ./target/backend-chat-realtime-0.0.1-SNAPSHOT.jar /usr/src/app/backend-chat-realtime.jar
+COPY ./target/chat-realtime-backend-0.0.1-SNAPSHOT.jar /usr/src/app/chat-realtime-backend.jar
 WORKDIR /usr/src/app
-CMD ["java", "-jar", "backend-chat-realtime.jar"]
+CMD ["java", "-jar", "chat-realtime-backend.jar"]
