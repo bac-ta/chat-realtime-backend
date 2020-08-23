@@ -16,5 +16,16 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+
 server:
   port: 1234
+
+openfire:
+  host: localhost
+  port: 9090
+  secret-key: qGhrVCAQ9k96vING
+
+app:
+  auth:
+    token-secret: ZGltYWdlc2hhcmUtbGVnYWN5LWJhY2tlbmQtcHJvamVjdA==
+    token-expiration-msec: 36000000
