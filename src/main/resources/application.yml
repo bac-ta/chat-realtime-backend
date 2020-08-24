@@ -19,11 +19,12 @@ spring:
 
 server:
   port: 1234
-
+  servlet:
+    context-path: /api
 openfire:
   host: localhost
   port: 9090
-  secret-key: qGhrVCAQ9k96vING
+  secret-key: F0Q8t0rOY8hhodIe
 
 app:
   auth:
