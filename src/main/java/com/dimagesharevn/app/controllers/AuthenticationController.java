@@ -1,9 +1,14 @@
 package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
+import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.rest.request.LoginRequest;
 import com.dimagesharevn.app.rest.response.LoginResponse;
 import com.dimagesharevn.app.services.AuthenticationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(APIEndpointBase.AUTH_ENDPOINT_BASE)
+@Api(tags = {"Authentication API"})
 public class AuthenticationController {
     private AuthenticationService authService;
 
@@ -25,6 +31,11 @@ public class AuthenticationController {
         this.authService = authService;
     }
 
+    @ApiOperation(value = "Login api", response = LoginResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = APIMessage.LOGIN_SUCCESSFUL),
+            @ApiResponse(code = 401, message = APIMessage.ACCOUNT_INVALID),
+    })
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
         LoginResponse resp = authService.login(req);
