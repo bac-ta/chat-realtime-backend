@@ -1,7 +1,7 @@
-package com.dimagesharevn.app.security.jwt;
+package com.dimagesharevn.app.config.jwt;
 
 import com.dimagesharevn.app.constants.ExceptionMessage;
-import com.dimagesharevn.app.security.factory.JwtTokenProviderFactory;
+import com.dimagesharevn.app.config.factory.JwtTokenProviderFactory;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;

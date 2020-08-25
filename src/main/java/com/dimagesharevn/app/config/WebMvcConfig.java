@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.security.config;
+package com.dimagesharevn.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

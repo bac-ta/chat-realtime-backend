@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.security.jwt;
+package com.dimagesharevn.app.config.jwt;
 
 import com.dimagesharevn.app.services.UserDetailsImplService;
 import lombok.NoArgsConstructor;

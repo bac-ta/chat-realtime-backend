@@ -1,8 +1,8 @@
-package com.dimagesharevn.app.security.config;
+package com.dimagesharevn.app.config;
 
 import com.dimagesharevn.app.enumerations.UserType;
-import com.dimagesharevn.app.security.jwt.JwtAuthenticationEntryPoint;
-import com.dimagesharevn.app.security.jwt.JwtAuthenticationFilter;
+import com.dimagesharevn.app.config.jwt.JwtAuthenticationEntryPoint;
+import com.dimagesharevn.app.config.jwt.JwtAuthenticationFilter;
 import com.dimagesharevn.app.services.UserDetailsImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
