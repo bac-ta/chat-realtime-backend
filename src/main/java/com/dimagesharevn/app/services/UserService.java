@@ -20,7 +20,7 @@ public class UserService {
 
     public UserRegistResponse createUser(UserRegistRequest request) {
         RestTemplate template = new RestTemplate();
-        UserRegistRequest created = template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/plugins/restapi/v1/users", request, UserRegistRequest.class);
+        UserRegistRequest created = template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users", request, UserRegistRequest.class);
         if (created != null)
             return new UserRegistResponse(created.getUsername(), APIMessage.REGIST_USER_SUCCESSFUL);
 
