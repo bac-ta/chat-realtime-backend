@@ -1,8 +1,8 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.config.jwt.AccountPrincipal;
 import com.dimagesharevn.app.entities.User;
 import com.dimagesharevn.app.repositories.UserRepository;
-import com.dimagesharevn.app.config.jwt.AccountPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

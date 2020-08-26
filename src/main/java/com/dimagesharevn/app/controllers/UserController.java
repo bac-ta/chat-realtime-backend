@@ -22,7 +22,9 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(APIEndpointBase.USER_ENDPOINT_BASE)
-@Api(tags = {"User API"})
+@Api(
+        tags = "User API"
+)
 public class UserController {
     private final UserService userService;
 
@@ -31,7 +33,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @ApiOperation(value = "User api", response = LoginResponse.class)
+    @ApiOperation(value = "User api", notes = "Create user", response = LoginResponse.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = APIMessage.REGIST_USER_SUCCESSFUL),
             @ApiResponse(code = 400, message = APIMessage.REGIST_USER_FAIL),

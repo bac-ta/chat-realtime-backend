@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface JwtTokenProviderFactory {
-    String generateToken(Authentication authentication);
+    String generateToken(String username, String email, String name);
 
     String getUsernameFromJWT(String token);
 
