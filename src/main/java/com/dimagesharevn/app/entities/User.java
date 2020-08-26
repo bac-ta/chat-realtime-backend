@@ -1,17 +1,16 @@
 package com.dimagesharevn.app.entities;
 
-import com.dimagesharevn.app.enumerations.UserType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "ofUser")
 @Data
+@Entity
 public class User {
     @Column
     @Id
@@ -26,8 +25,4 @@ public class User {
     @Column
     @ApiModelProperty(notes = "Email of user")
     private String email;
-    @Column(nullable = false, name = "type")
-    @Enumerated(value = EnumType.STRING)
-    @ApiModelProperty(notes = "Type of user")
-    private UserType userType = UserType.NORMAL;
 }

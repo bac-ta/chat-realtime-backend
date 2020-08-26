@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.0.101:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: root
-    password: dimagesharevn
+    password: Silencer&&55
     platform: mysql
     initialization-mode: always
 
@@ -16,15 +16,18 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 1234
   servlet:
     context-path: /api
 openfire:
-  host: localhost
-  port: 9090
   secret-key: F0Q8t0rOY8hhodIe
+  host: localhost
+  xmpp-client-connection-port: 5222
+  xmpp-domain: dimagesharevn.develop
 
 app:
   auth:

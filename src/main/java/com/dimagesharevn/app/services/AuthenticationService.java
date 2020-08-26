@@ -24,7 +24,7 @@ import java.io.IOException;
 public class AuthenticationService {
     private JwtTokenProviderFactory jwtFactory;
     private AuthenticationManager authManager;
-    @Value("${openfire.rest-api-enpoint-base}")
+    @Value("${openfire.xmpp-domain}")
     private String xmppDomain;
     @Value("${openfire.xmpp-client-connection-port}")
     private int port;

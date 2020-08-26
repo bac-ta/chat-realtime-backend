@@ -30,8 +30,8 @@ public class APIMessage {
 
     //User
     public static final String REGIST_USER_SUCCESSFUL = "Regist user succesful";
-    public static final String REGIST_USER_FAIL = "Regist user fail";
-    public static final String APPROVE_TYPE_INVALID = "Approve type invalid";
+    public static final String REGIST_USER_FAIL = "Regist user fail because conflict";
+    public static final String APPROVE_TYPE_INVALID = "Approve type invalidonflict";
     public static final String GENDER_TYPE_INVALID = "Gender type invalid";
     public static final String USER_TYPE_INVALID = "User type invalid";
     public static final String OAUTH2_TYPE_INVALID = "OAuth2 type invalid";

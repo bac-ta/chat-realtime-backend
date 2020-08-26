@@ -1,6 +1,5 @@
 package com.dimagesharevn.app.config;
 
-import com.dimagesharevn.app.enumerations.UserType;
 import com.dimagesharevn.app.config.jwt.JwtAuthenticationEntryPoint;
 import com.dimagesharevn.app.config.jwt.JwtAuthenticationFilter;
 import com.dimagesharevn.app.services.UserDetailsImplService;
@@ -30,8 +29,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsImplService userDetailsService;
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsImplService userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Autowired
     public SecurityConfiguration(UserDetailsImplService userDetailsService, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
@@ -58,8 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/login", "/user/regist", "/file/view-file/*").permitAll()
-                .antMatchers("/post/*", "/file/*", "/category/*").hasAuthority(UserType.ADMINITRATOR.getName())
+                .antMatchers("/auth/login", "/user/create").permitAll()
                 .anyRequest()
                 .authenticated();
         // Add our custom JWT security filter

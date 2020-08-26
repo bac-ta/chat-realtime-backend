@@ -5,6 +5,7 @@ import com.dimagesharevn.app.constants.APIMessage;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 })
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserRegistRequest {
     @NotBlank(message = APIMessage.USER_NAME_NOT_BLANK)
     private String username;

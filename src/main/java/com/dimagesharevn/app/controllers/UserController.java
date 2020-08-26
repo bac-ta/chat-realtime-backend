@@ -40,7 +40,7 @@ public class UserController {
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {
         UserRegistResponse response = userService.createUser(request);
         if (response.getUsername() == null)
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
