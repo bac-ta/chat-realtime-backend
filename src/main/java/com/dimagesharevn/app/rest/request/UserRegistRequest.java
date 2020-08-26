@@ -2,6 +2,7 @@ package com.dimagesharevn.app.rest.request;
 
 import com.dimagesharevn.app.annonations.FieldMatch;
 import com.dimagesharevn.app.constants.APIMessage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class UserRegistRequest {
     private String email;
     @NotBlank
     private String password;
+    @JsonIgnore
     private String confirmPassword;
 }
