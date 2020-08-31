@@ -1,6 +1,6 @@
 package com.dimagesharevn.app.repositories;
 
-import com.dimagesharevn.app.entities.User;
+import com.dimagesharevn.app.models.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

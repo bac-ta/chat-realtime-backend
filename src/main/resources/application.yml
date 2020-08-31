@@ -21,10 +21,15 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
+  redis:
+    host: localhost
+    port: 6379
+
 server:
   port: 1234
   servlet:
     context-path: /api
+
 openfire:
   secret-key: F0Q8t0rOY8hhodIe
   host: localhost

@@ -2,7 +2,7 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.config.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.entities.User;
+import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.repositories.UserRepository;
 import com.dimagesharevn.app.rest.request.LoginRequest;
 import com.dimagesharevn.app.rest.response.LoginResponse;

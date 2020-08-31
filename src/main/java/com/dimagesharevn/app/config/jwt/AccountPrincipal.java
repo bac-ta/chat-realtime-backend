@@ -1,6 +1,6 @@
 package com.dimagesharevn.app.config.jwt;
 
-import com.dimagesharevn.app.entities.User;
+import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.enumerations.UserType;
 import lombok.Data;
 import lombok.NoArgsConstructor;

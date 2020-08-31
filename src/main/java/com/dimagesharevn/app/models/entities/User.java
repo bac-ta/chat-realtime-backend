@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.entities;
+package com.dimagesharevn.app.models.entities;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
