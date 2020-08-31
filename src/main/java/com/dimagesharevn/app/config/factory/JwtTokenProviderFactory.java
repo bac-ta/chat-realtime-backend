@@ -1,6 +1,5 @@
 package com.dimagesharevn.app.config.factory;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
