@@ -1,6 +1,7 @@
 package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.rest.response.APIErrorResponse;
+import com.dimagesharevn.app.utils.HttpClientExceptionHandler;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,10 +28,10 @@ public class GlobalExceptionHandlerController {
      * @param request The current request
      */
     @ExceptionHandler({
-            ResourceNotFoundExceptionHandler.class
+            ResourceNotFoundExceptionHandler.class, HttpClientExceptionHandler.class
     })
     @Nullable
-    public final ResponseEntity<APIErrorResponse> handleException(Exception ex, WebRequest request) {
+    public final ResponseEntity<APIErrorResponse> handleNotFoundException(Exception ex, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
 
         LOGGER.error("Handling " + ex.getClass().getSimpleName() + " due to " + ex.getMessage());
@@ -39,7 +40,12 @@ public class GlobalExceptionHandlerController {
             HttpStatus status = HttpStatus.NOT_FOUND;
             ResourceNotFoundExceptionHandler exception = (ResourceNotFoundExceptionHandler) ex;
 
-            return handleUserNotFoundException(exception, headers, status, request);
+            return handleNotFoundException(exception, headers, status, request);
+        } else if (ex instanceof HttpClientExceptionHandler) {
+            HttpStatus status = HttpStatus.BAD_REQUEST;
+            HttpClientExceptionHandler exception = (HttpClientExceptionHandler) ex;
+
+            return handleHttpClientException(exception, headers, status, request);
         } else {
             if (LOGGER.isWarnEnabled()) {
                 LOGGER.warn("Unknown exception type: " + ex.getClass().getName());
@@ -50,6 +56,7 @@ public class GlobalExceptionHandlerController {
         }
     }
 
+
     /**
      * Customize the response for ResourceNotFoundExceptionHandler.
      *
@@ -58,9 +65,24 @@ public class GlobalExceptionHandlerController {
      * @param status  The selected response status
      * @return a {@code ResponseEntity} instance
      */
-    protected ResponseEntity<APIErrorResponse> handleUserNotFoundException(ResourceNotFoundExceptionHandler ex,
-                                                                           HttpHeaders headers, HttpStatus status,
-                                                                           WebRequest request) {
+    protected ResponseEntity<APIErrorResponse> handleNotFoundException(ResourceNotFoundExceptionHandler ex,
+                                                                       HttpHeaders headers, HttpStatus status,
+                                                                       WebRequest request) {
+        List<String> errors = Collections.singletonList(ex.getMessage());
+        return handleExceptionInternal(ex, new APIErrorResponse(errors), headers, status, request);
+    }
+
+    /**
+     * Customize the response for HttpClientExceptionHandler.
+     *
+     * @param ex      The exception
+     * @param headers The headers to be written to the response
+     * @param status  The selected response status
+     * @return a {@code ResponseEntity} instance
+     */
+    protected ResponseEntity<APIErrorResponse> handleHttpClientException(HttpClientExceptionHandler ex,
+                                                                         HttpHeaders headers, HttpStatus status,
+                                                                         WebRequest request) {
         List<String> errors = Collections.singletonList(ex.getMessage());
         return handleExceptionInternal(ex, new APIErrorResponse(errors), headers, status, request);
     }
