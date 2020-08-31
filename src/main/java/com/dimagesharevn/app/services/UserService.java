@@ -2,10 +2,8 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.repositories.UserRepository;
 import com.dimagesharevn.app.rest.request.UserRegistRequest;
 import com.dimagesharevn.app.rest.response.UserRegistResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,14 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
     @Value("${openfire.secret-key}")
     private String openfireSecretKey;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public UserRegistResponse createUser(UserRegistRequest request) throws HttpClientErrorException {
         RestTemplate template = new RestTemplate();
