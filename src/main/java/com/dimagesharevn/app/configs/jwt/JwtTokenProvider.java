@@ -1,6 +1,6 @@
-package com.dimagesharevn.app.config.jwt;
+package com.dimagesharevn.app.configs.jwt;
 
-import com.dimagesharevn.app.config.factory.JwtTokenProviderFactory;
+import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.ExceptionMessage;
 import com.dimagesharevn.app.enumerations.UserType;
 import io.jsonwebtoken.Claims;

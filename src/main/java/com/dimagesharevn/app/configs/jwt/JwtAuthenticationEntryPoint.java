@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.config.jwt;
+package com.dimagesharevn.app.configs.jwt;
 
 import com.dimagesharevn.app.constants.APIMessage;
 import org.slf4j.Logger;

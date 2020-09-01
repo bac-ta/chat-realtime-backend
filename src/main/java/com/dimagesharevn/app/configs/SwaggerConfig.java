@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.config;
+package com.dimagesharevn.app.configs;
 
 import com.dimagesharevn.app.constants.APIMessage;
 import com.google.common.collect.Lists;

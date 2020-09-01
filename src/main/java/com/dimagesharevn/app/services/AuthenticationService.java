@@ -1,6 +1,6 @@
 package com.dimagesharevn.app.services;
 
-import com.dimagesharevn.app.config.factory.JwtTokenProviderFactory;
+import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.repositories.UserRepository;

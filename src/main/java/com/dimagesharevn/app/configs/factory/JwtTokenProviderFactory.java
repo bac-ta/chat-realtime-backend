@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.config.factory;
+package com.dimagesharevn.app.configs.factory;
 
 import org.springframework.stereotype.Service;
 

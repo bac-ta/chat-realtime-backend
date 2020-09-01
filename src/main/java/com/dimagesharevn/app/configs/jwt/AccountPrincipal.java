@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.config.jwt;
+package com.dimagesharevn.app.configs.jwt;
 
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.enumerations.UserType;
