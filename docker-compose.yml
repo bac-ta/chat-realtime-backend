@@ -5,7 +5,7 @@ services:
   chat-backend-app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: AppDockerfile
     ports:
       - "1234:8080"
     expose:
@@ -14,18 +14,18 @@ services:
     extra_hosts:
       - localhost:127.0.0.1
     depends_on:
-      - mysql_database
+      - mysql-database
     networks:
       - chatapp-network
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_database:3306/chat-realtime-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: chatapp-realtime
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-database:3306/chat-realtime-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: chat-realtime-app
       SPRING_DATASOURCE_PASSWORD: dimagesharevn
       SPRING_REDIS.HOST: redis
       SPRING_REDIS.PORT: 6379
 
   # Database Service (Mysql)
-  mysql_database:
+  mysql-database:
     image: mysql:8
     ports:
       - "3309:3306"
@@ -47,7 +47,7 @@ services:
       retries: 30
 
   # Redis service
-  redis-service:
+  redis:
     image: redis
     hostname: redis-host
     ports:
@@ -58,11 +58,42 @@ services:
     volumes:
       - redis-data:/var/lib/redis
 
+  # Openfire service
+  openfire:
+    image: openfire
+    build:
+      context: .
+      dockerfile: OpenFireDockerfile
+    ports:
+      - "3478:3478"
+      - "3479:3479"
+      - "5222:5222"
+      - "5223:5223"
+      - "5229:5229"
+      - "5275:5275"
+      - "5276:5276"
+      - "5262:5262"
+      - "5263:5263"
+      - "7070:7070"
+      - "7443:7443"
+      - "7777:7777"
+      - "9090:9090"
+      - "9091:9091"
+    volumes:
+      - openfire-lib:/var/lib/openfire
+      - openfire-log:/var/log/openfire
+    networks:
+      - chatapp-network
+    depends_on:
+      - mysql-database
+
 # Volumes
 volumes:
   db-data:
   redis-data:
+  openfire-lib:
+  openfire-log:
 
 # Networks to be created to facilitate communication between containers
 networks:
-  my-network:
+  chatapp-network:

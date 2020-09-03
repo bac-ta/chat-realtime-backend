@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql_database:3309/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: chatapp-realtime
+    username: chat-realtime-app
     password: dimagesharevn
     platform: mysql
     initialization-mode: always
