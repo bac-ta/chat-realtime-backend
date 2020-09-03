@@ -1,6 +1,6 @@
 package com.dimagesharevn.app.controllers;
 
-import com.dimagesharevn.app.rest.response.APIErrorResponse;
+import com.dimagesharevn.app.models.rest.response.APIErrorResponse;
 import com.dimagesharevn.app.utils.HttpClientExceptionHandler;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
 import org.slf4j.Logger;

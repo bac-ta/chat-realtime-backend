@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.rest.response;
+package com.dimagesharevn.app.models.rest.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

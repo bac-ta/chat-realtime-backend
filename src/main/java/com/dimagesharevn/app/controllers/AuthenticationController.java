@@ -2,8 +2,8 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.rest.request.LoginRequest;
-import com.dimagesharevn.app.rest.response.LoginResponse;
+import com.dimagesharevn.app.models.rest.request.LoginRequest;
+import com.dimagesharevn.app.models.rest.response.LoginResponse;
 import com.dimagesharevn.app.services.AuthenticationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

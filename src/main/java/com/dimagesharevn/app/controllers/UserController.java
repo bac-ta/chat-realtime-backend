@@ -2,9 +2,9 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.rest.request.UserRegistRequest;
-import com.dimagesharevn.app.rest.response.LoginResponse;
-import com.dimagesharevn.app.rest.response.UserRegistResponse;
+import com.dimagesharevn.app.models.rest.request.UserRegistRequest;
+import com.dimagesharevn.app.models.rest.response.LoginResponse;
+import com.dimagesharevn.app.models.rest.response.UserRegistResponse;
 import com.dimagesharevn.app.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
