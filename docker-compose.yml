@@ -15,6 +15,7 @@ services:
       - localhost:127.0.0.1
     depends_on:
       - mysql-database
+      - redis
     networks:
       - chatapp-network
     environment:
@@ -34,7 +35,7 @@ services:
       MYSQL_DATABASE: chat-realtime-db
       MYSQL_USER: chat-realtime-app
       MYSQL_PASSWORD: dimagesharevn
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: Root55&&93
     volumes:
       - db-data:/var/lib/mysql
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
