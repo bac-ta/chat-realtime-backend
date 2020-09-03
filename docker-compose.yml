@@ -21,6 +21,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_database:3306/chat-realtime-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: chatapp-realtime
       SPRING_DATASOURCE_PASSWORD: dimagesharevn
+      SPRING_REDIS.HOST: redis
+      SPRING_REDIS.PORT: 6379
 
   # Database Service (Mysql)
   mysql_database:
@@ -46,8 +48,8 @@ services:
 
   # Redis service
   redis-service:
-    image: "redis:alpine"
-    hostname: localhost
+    image: redis
+    hostname: redis
     ports:
       - "6379:6379"
     command: [ "redis-server", "--protected-mode", "no" ]
