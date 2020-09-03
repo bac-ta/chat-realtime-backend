@@ -49,7 +49,7 @@ services:
   # Redis service
   redis-service:
     image: redis
-    hostname: redis
+    hostname: redis-host
     ports:
       - "6379:6379"
     command: [ "redis-server", "--protected-mode", "no" ]
