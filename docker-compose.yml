@@ -13,3 +13,54 @@ services:
     restart: always
     extra_hosts:
       - localhost:127.0.0.1
+    depends_on:
+      - mysql_database
+    networks:
+      - chatapp-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_database:3306/chat-realtime-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: chatapp-realtime
+      SPRING_DATASOURCE_PASSWORD: dimagesharevn
+
+  # Database Service (Mysql)
+  mysql_database:
+    image: mysql:8
+    ports:
+      - "3309:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: chat-realtime-db
+      MYSQL_USER: chat-realtime-app
+      MYSQL_PASSWORD: dimagesharevn
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    networks:
+      - chatapp-network
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-P", "3306", "-u", "root", "--password=root", "-e", "select 1", "DOCKERDB"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  # Redis service
+  redis-service:
+    image: "redis:alpine"
+    hostname: localhost
+    ports:
+      - "6379:6379"
+    command: [ "redis-server", "--protected-mode", "no" ]
+    networks:
+      - chatapp-network
+    volumes:
+      - redis-data:/var/lib/redis
+
+# Volumes
+volumes:
+  db-data:
+  redis-data:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  my-network:
