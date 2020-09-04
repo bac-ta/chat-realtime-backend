@@ -9,7 +9,10 @@ services:
       - 7777:7777
       - 7070:7070
     volumes:
-      - ./data/openfire-data:/var/lib/openfire
-      - ./data/logs:/var/log/openfire
+      - openfire-data:/var/lib/openfire
+      - data-logs:/var/log/openfire
     environment:
       DAEMON_OPTS: -Xms32m -Xmx128m -Xss128k -Xoss128k -XX:ThreadStackSize=128 -XX:+PrintGCDetails -Xloggc:/var/log/openfire/gc.log -XX:+HeapDumpOnOutOfMemoryError
+volumes:
+  openfire-data:
+  data-logs:

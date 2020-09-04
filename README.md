@@ -10,7 +10,7 @@ Openfire is a real time collaboration (RTC) server licensed under the Open Sourc
 https://cloud.docker.com/repository/docker/sharksoft/openfire
 
 
-Start full stack Openfire/MySQL using: (cd /{root-your project}/docker-build) and run:
+Start full stack Openfire/MySQL using: (cd /{root-your project}) and run:
 
 ```bash
 $ docker-compose up
