@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM openjdk:8-jre-stretch
 
 ENV OPENFIRE_VERSION=4.5.3 \
     OPENFIRE_USER=openfire \
@@ -6,7 +6,7 @@ ENV OPENFIRE_VERSION=4.5.3 \
     OPENFIRE_LOG_DIR=/var/log/openfire
 
 RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-11-jre sudo wget \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jre sudo wget \
  && echo "Downloading openfire_${OPENFIRE_VERSION}_all.deb ..." \
  && wget --no-verbose "http://download.igniterealtime.org/openfire/openfire_${OPENFIRE_VERSION}_all.deb" -O /tmp/openfire_${OPENFIRE_VERSION}_all.deb
 
@@ -15,11 +15,11 @@ RUN dpkg -i /tmp/openfire_${OPENFIRE_VERSION}_all.deb \
  && rm -rf openfire_${OPENFIRE_VERSION}_all.deb \
  && rm -rf /var/lib/apt/lists/*
 
-COPY mysql-connector-java-8.0.21.jar /usr/share/openfire/lib/mysql.jar
+COPY mysql-connector-java-8.0.12.jar /usr/share/openfire/lib/mysql.jar
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
-EXPOSE 3478/tcp 3479/tcp 5222/tcp 5223/tcp 5229/tcp 5275/tcp 5276/tcp 5262/tcp 5263/tcp 7070/tcp 7443/tcp 7777/tcp 9090/tcp 9091/tcp
+EXPOSE 3478 3479 5222 5223 5229 5275 5276 5262 5263 7070 7443 7777 9090 9091
 VOLUME ["${OPENFIRE_DATA_DIR}"]
 ENTRYPOINT ["/sbin/entrypoint.sh"]

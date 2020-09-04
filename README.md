@@ -1,0 +1,37 @@
+# docker-compose openfire
+
+This docker setup contains a stack with:
+* openfire v4.45.3
+
+## What is Openfire?
+Openfire is a real time collaboration (RTC) server licensed under the Open Source Apache License. It uses the only widely adopted open protocol for instant messaging, XMPP (also called Jabber). (https://www.igniterealtime.org/projects/openfire/)
+
+## Official image on Docker Hub
+https://cloud.docker.com/repository/docker/sharksoft/openfire
+
+
+Start full stack Openfire/MySQL using: (cd /{root-your project}/docker-build) and run:
+
+```bash
+$ docker-compose up
+```
+
+## Services
+* Openfire Admin Console > http://localhost:9090 
+
+## Openfire connect to MySQL
+Use this db settings in openfire initial setup:
+* jdbc:mysql://mysql_openfire:3306/openfire?rewriteBatchedStatements=true 
+* user: openfire
+* pwd: openfire
+
+## Destroy Stack
+```bash
+$ docker-compose stop
+$ docker-compose rm
+$ docker system prune --force --volumes
+```
+
+## Based on
+* https://github.com/sameersbn/docker-openfire
+* https://github.com/juanromanf/openfire-stack
