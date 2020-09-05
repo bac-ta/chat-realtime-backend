@@ -1,18 +1,44 @@
 version: '3.7'
 services:
-  openfire:
-    build: .docker
+
+  # Database Service (Mysql)
+  mysql_database:
+    image: mysql:8
     ports:
-      - 9090:9090
-      - 9091:9091
-      - 5222:5222
-      - 7777:7777
-      - 7070:7070
+      - "3307:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: chat-realtime-db
+      MYSQL_USER: chat-app
+      MYSQL_PASSWORD: dimagesharevn
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+    networks:
+      - chatapp-network
+
+  # Openfire
+  openfire:
+    image: quantumobject/docker-openfire
+    ports:
+      - "9090:9090/tcp"
+      - "9091:9091/tcp"
+      - "5222:5222/tcp"
+      - "7777:7777/tcp"
+      - "7070:7070/tcp"
     volumes:
       - openfire-data:/var/lib/openfire
-      - data-logs:/var/log/openfire
-    environment:
-      DAEMON_OPTS: -Xms32m -Xmx128m -Xss128k -Xoss128k -XX:ThreadStackSize=128 -XX:+PrintGCDetails -Xloggc:/var/log/openfire/gc.log -XX:+HeapDumpOnOutOfMemoryError
+      - openfire-logs:/var/log/openfire
+    links:
+      - mysql_database
+    depends_on:
+      - mysql_database
+    networks:
+      - chatapp-network
 volumes:
+  db-data:
   openfire-data:
-  data-logs:
+  openfire-logs:
+networks:
+  chatapp-network:
