@@ -81,8 +81,8 @@ services:
 
       SPRING_MAIN_ALLOW-BEAN-DEFINITION-OVERRIDING: "true"
 
-      SPRING_REDIS_HOST: redis-host
-      SPRING_REDIS_PORT: 6379
+#      SPRING_REDIS_HOST: redis-host
+#      SPRING_REDIS_PORT: 6379
       SERVER_PORT: 1234
       SERVER_SERVLET_CONTEXT-PATH: /api
     extra_hosts:
