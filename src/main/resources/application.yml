@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql_database:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3307/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: chat-app
     password: dimagesharevn
     platform: mysql
@@ -11,7 +11,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
