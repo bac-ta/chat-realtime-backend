@@ -59,8 +59,6 @@ services:
     expose:
       - "1234"
     restart: always
-    extra_hosts:
-      - localhost:127.0.0.1
     depends_on:
       - mysql_database
       - redis
@@ -85,6 +83,10 @@ services:
 
       SPRING_REDIS_HOST: redis-host
       SPRING_REDIS_PORT: 6379
+      SERVER_PORT: 1234
+      SERVER_SERVLET_CONTEXT-PATH: /api
+    extra_hosts:
+      - localhost:127.0.0.1
 
 
 
