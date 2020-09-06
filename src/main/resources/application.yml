@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql_database:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3307/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: chat-app
     password: dimagesharevn
     platform: mysql
@@ -26,7 +26,7 @@ spring:
     port: 6379
 
 server:
-  port: 1234
+  port: 8080
   servlet:
     context-path: /api
 
