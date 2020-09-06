@@ -16,7 +16,8 @@ services:
       - db-data:/var/lib/mysql
     command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
     networks:
-      - chatapp-network
+      chatapp-network:
+        ipv4_address: 172.22.0.2
 
   # Openfire
   openfire:
@@ -35,7 +36,8 @@ services:
     depends_on:
       - mysql_database
     networks:
-      - chatapp-network
+      chatapp-network:
+        ipv4_address: 172.22.0.3
 
   # Redis
   redis:
@@ -44,53 +46,27 @@ services:
     ports:
       - "6379:6379"
     command: [ "redis-server", "--protected-mode", "no" ]
-    networks:
-      - chatapp-network
     volumes:
       - redis-data:/var/lib/redis
+    networks:
+      chatapp-network:
+        ipv4_address: 172.22.0.4
 
   # App config
   chat-app:
+    image: "chat-app"
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "1234:8080"
-    expose:
-      - "1234"
     restart: always
     depends_on:
       - mysql_database
       - redis
     networks:
-      - chatapp-network
-    environment:
-      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_database:3306/chat-realtime-db?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: chat-app
-      SPRING_DATASOURCE_PASSWORD: dimagesharevn
-      SPRING_DATASOURCE_PLATFORM: mysql
-      SPRING_DATASOURCE_INITIALIZATION-MODE: always
-
-      SPRING_JPA_DATABSE: mysql
-      SPRING_JPA_SHOW-SQL: "true"
-      SPRING_JPA_HIBERNATE_DDL-AUTO: "none"
-      SPRING_JPA_HIBERNATE_NAMING-STRATEGY: org.hibernate.cfg.ImprovedNamingStrategy
-      SPRING_JPA_HIBERNATE_NAMING_PHYSICAL-STRATEGY: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      SPRING_JPA_HIBERNATE_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
-
-      SPRING_MAIN_ALLOW-BEAN-DEFINITION-OVERRIDING: "true"
-
-#      SPRING_REDIS_HOST: redis-host
-#      SPRING_REDIS_PORT: 6379
-      SERVER_PORT: 1234
-      SERVER_SERVLET_CONTEXT-PATH: /api
-    extra_hosts:
-      - localhost:127.0.0.1
-
-
-
-
+      chatapp-network:
+        ipv4_address: 172.22.0.5
 
 volumes:
   db-data:
@@ -99,3 +75,7 @@ volumes:
   redis-data:
 networks:
   chatapp-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.0.0/16
