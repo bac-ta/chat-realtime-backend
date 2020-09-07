@@ -22,13 +22,13 @@ $ docker-compose up -d --build
 * Openfire Admin Console > http://localhost:9090 
 ##### Connection information: 
 ##### XMPP Domain Name:	
-###### dimagesharevn.develop
+##### dimagesharevn.develop
 ##### Server Host Name (FQDN):
-###### dimagesharevn.develop
+##### dimagesharevn.develop
 ##### Mysql connection: 
-###### jdbc:mysql://mysql_database:3306/chat-realtime-db?rewriteBatchedStatements=true 
-###### username: chat-app
-###### password: dimagesharevn
+##### jdbc:mysql://mysql_database:3306/chat-realtime-db?rewriteBatchedStatements=true 
+##### username: chat-app
+##### password: dimagesharevn
 (You can set up admin account controller like this: email: admin@example.com/ password: dimagesharevn). Then, when login admin controller, username/password is: admin/dimagesharevn
 
 * You need install REST API plugin : In tab Plugins, click Avaiables plugin, find REST API plugin and click (+) to add plugin
