@@ -1,19 +1,20 @@
-package com.dimagesharevn.app.models.rest.request;
+package com.dimagesharevn.app.models.rests.request;
 
 import com.dimagesharevn.app.constants.APIMessage;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
-    @JsonProperty(required = true)
+public class UserRegistRequest {
     @NotBlank(message = APIMessage.USER_NAME_NOT_BLANK)
     private String username;
-    @JsonProperty(required = true)
-    @NotBlank(message = APIMessage.PASSWORD_NOT_BLANK)
+    private String name;
+    private String email;
+    @NotBlank
     private String password;
 }

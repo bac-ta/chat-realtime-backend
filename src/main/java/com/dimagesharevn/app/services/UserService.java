@@ -2,8 +2,8 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.models.rest.request.UserRegistRequest;
-import com.dimagesharevn.app.models.rest.response.UserRegistResponse;
+import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
+import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
