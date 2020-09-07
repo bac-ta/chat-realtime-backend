@@ -27,6 +27,8 @@ public class APIMessage {
     public static String ENDTRY_POINT_UNAUTHORIZED = "Responding with unauthorized error. Message - {}";
     public static final String ACCOUNT_INVALID = "Account invalid, please try again !";
     public static String OAUTH2_UNAUTHORIZED = "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication";
+    public static final String LOGOUT_SUCCESSFULL = "Logout successful";
+    public static final String LOGOUT_FAILURE = "Logout failure";
 
     //User
     public static final String REGIST_USER_SUCCESSFUL = "Regist user succesful";

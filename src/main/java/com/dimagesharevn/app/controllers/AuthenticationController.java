@@ -44,6 +44,11 @@ public class AuthenticationController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Logout api")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = APIMessage.LOGOUT_SUCCESSFULL),
+            @ApiResponse(code = 400, message = APIMessage.LOGOUT_FAILURE),
+    })
     @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody LogoutRequest req) {
         authService.logout(req.getJwt());
