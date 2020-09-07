@@ -6,12 +6,10 @@ import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;
 
-@RedisHash(value = "jwt")
-@AllArgsConstructor
+@RedisHash("jwt")
 @Data
+@AllArgsConstructor
 public class JWT {
     @Id
     private String id;
-    private String username;
-    private String jwt;
 }
