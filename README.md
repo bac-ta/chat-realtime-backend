@@ -22,23 +22,23 @@ $ docker-compose up -d --build
 * Openfire Admin Console > http://localhost:9090 
 ##### Connection information: 
 ##### XMPP Domain Name:	
-######dimagesharevn.develop
-#####Server Host Name (FQDN):
-######dimagesharevn.develop
-#####Mysql connection: 
-######jdbc:mysql://mysql_openfire:3306/chat-realtime-db?rewriteBatchedStatements=true 
-######username: chat-app
-######password: dimagesharevn
+###### dimagesharevn.develop
+##### Server Host Name (FQDN):
+###### dimagesharevn.develop
+##### Mysql connection: 
+###### jdbc:mysql://mysql_openfire:3306/chat-realtime-db?rewriteBatchedStatements=true 
+###### username: chat-app
+###### password: dimagesharevn
 (You can set up admin account controller like this: email: admin@example.com/ password: dimagesharevn). Then, when login admin controller, username/password is: admin/dimagesharevn
 
 * You need install REST API plugin : In tab Plugins, click Avaiables plugin, find REST API plugin and click (+) to add plugin
 * Click Tabl Server > Server setting > REST API and tick:
-######Enabled - REST API requests will be processed
-######Tick Secret key auth and fill key string: F0Q8t0rOY8hhodIe
-######Tick Enabled - Logging Enabled
-######Save setting
+###### Enabled - REST API requests will be processed
+###### Tick Secret key auth and fill key string: F0Q8t0rOY8hhodIe
+###### Tick Enabled - Logging Enabled
+###### Save setting
 
-#***Now we can run app on base endpoint: http://172.22.0.5:1234/api/ and enjoy !***
+***Now we can run app on base endpoint: http://172.22.0.5:1234/api/ and enjoy !***
 ## Destroy each other container (recommendation)
 **Note: Because our container has enviroments like openfire, mysql, redis data, so you might keep it, and only remove "chat-app" If you 're really need . Now, if you remove each container, first, you need getting its id. Run:**
 ```bash
