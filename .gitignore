@@ -31,7 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-Dockerfile
-docker-compose.yml
-README.md
-/src/main/resources/application.yml
