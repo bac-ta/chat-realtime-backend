@@ -22,7 +22,7 @@ spring:
     allow-bean-definition-overriding: true
 
   redis:
-    host: redis-host
+    host: 172.22.0.4
     port: 6379
 
 server:
