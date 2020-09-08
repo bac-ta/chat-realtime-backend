@@ -52,6 +52,22 @@ services:
       chatapp-network:
         ipv4_address: 172.22.0.4
 
+  mail:
+    image: "jeboehm/mailserver-mda"
+    ports:
+    - "110:110"
+    - "995:995"
+    - "143:143"
+    - "993:993"
+    - "25:25"
+    - "587:587"
+    volumes:
+      - mail-data:/var/lib/mail
+    networks:
+      chatapp-network:
+        ipv4_address: 172.22.0.7
+
+
 #  # App config, this is development, so comment this service for app
 #  chat-app:
 #    image: "chat-app"
