@@ -22,8 +22,11 @@ spring:
     allow-bean-definition-overriding: true
 
   redis:
-    host: redis-host
     port: 6379
+    host: localhost
+  cache:
+    redis:
+      time-to-live: 36000000
 
 server:
   port: 8080
