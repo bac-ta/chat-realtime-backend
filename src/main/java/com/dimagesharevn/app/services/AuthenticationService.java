@@ -14,6 +14,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class AuthenticationService {
             conn2.connect().login();
 
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {
-            return new LoginResponse(APIMessage.LOGIN_FAILURE, null);
+            throw new AuthenticationCredentialsNotFoundException("");
         }
         User user = userRepository.findByUsername(username).get();
         String jwt = jwtFactory.generateToken(user.getUsername(), user.getEmail(), user.getName());
