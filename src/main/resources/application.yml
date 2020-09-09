@@ -35,7 +35,7 @@ server:
 
 openfire:
   secret-key: F0Q8t0rOY8hhodIe
-  host: 172.22.0.3
+  host: localhost
   xmpp-client-connection-port: 5222
   xmpp-domain: dimagesharevn.develop
 
