@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.models.rest.response;
+package com.dimagesharevn.app.models.rests.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,8 @@
 package com.dimagesharevn.app.controllers;
 
-import com.dimagesharevn.app.models.rest.response.APIErrorResponse;
+import com.dimagesharevn.app.constants.APIMessage;
+import com.dimagesharevn.app.models.rests.response.APIErrorResponse;
+import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.utils.HttpClientExceptionHandler;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
 import org.slf4j.Logger;
@@ -9,18 +11,24 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.util.WebUtils;
 
 import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
-public class GlobalExceptionHandlerController {
+public class GlobalExceptionHandlerController extends ResponseEntityExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandlerController.class);
 
+    @org.springframework.web.bind.annotation.ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticateException(AuthenticationException ex) {
+        return ResponseEntity.badRequest().body(new LoginResponse(APIMessage.LOGIN_FAILURE, null));
+    }
     /**
      * Provides handling for exceptions throughout this service.
      *
