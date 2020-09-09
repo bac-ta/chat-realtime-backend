@@ -24,6 +24,9 @@ spring:
   redis:
     host: 172.22.0.4
     port: 6379
+    cache:
+      redis:
+        time-to-live: 36000000
 
 server:
   port: 1234
