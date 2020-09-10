@@ -46,4 +46,7 @@ public class User {
     @Column
     @ApiModelProperty(notes = "Email of user")
     private String email;
+    @Column
+    @ApiModelProperty(notes = "Bcrypted password")
+    private String bcryptedPassword;
 }

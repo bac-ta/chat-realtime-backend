@@ -41,9 +41,6 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {
         UserRegistResponse response = userService.createUser(request);
-        if (response.getUsername() == null)
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 }
