@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -48,6 +49,7 @@ public class AuthenticationService {
     public LoginResponse login(LoginRequest req) {
         String username = req.getUsername();
         String password = req.getPassword();
+        AbstractXMPPConnection conn2 = null;
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(username, password)
@@ -57,11 +59,13 @@ public class AuthenticationService {
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
 
-            AbstractXMPPConnection conn2 = new XMPPTCPConnection(config);
+            conn2 = new XMPPTCPConnection(config);
             conn2.connect().login();
-
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {
             throw new AuthenticationCredentialsNotFoundException("");
+        } finally {
+            if (conn2 != null)
+                conn2.disconnect();
         }
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -78,6 +82,10 @@ public class AuthenticationService {
 
     public void logout(String jwt) {
         jwtRepository.deleteById(jwt);
+    }
+
+    public Optional<JWT> findByKey(String key) {
+        return jwtRepository.findById(key);
     }
 
 }

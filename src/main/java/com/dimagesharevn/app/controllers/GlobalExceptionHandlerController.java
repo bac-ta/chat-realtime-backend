@@ -3,6 +3,7 @@ package com.dimagesharevn.app.controllers;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.rests.response.APIErrorResponse;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
+import com.dimagesharevn.app.utils.UnauthorizedExceptionHandler;
 import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,11 @@ public class GlobalExceptionHandlerController extends ResponseEntityExceptionHan
         return handleHttpClientException(exception, exception.getStatusCode(), request);
     }
 
+    @ExceptionHandler(UnauthorizedExceptionHandler.class)
+    public ResponseEntity<APIErrorResponse> handleUnauthorizedException(UnauthorizedExceptionHandler exception) {
+        LOGGER.error("Handling " + exception.getClass().getSimpleName() + " due to " + exception.getMessage());
+        return new ResponseEntity<>(new APIErrorResponse(APIMessage.ENDTRY_POINT_UNAUTHORIZED, HttpStatus.UNAUTHORIZED.value()), HttpStatus.UNAUTHORIZED);
+    }
 
     /**
      * Customize the response for HttpClientExceptionHandler.
