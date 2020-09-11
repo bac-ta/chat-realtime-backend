@@ -6,10 +6,11 @@ import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.Id;
 
-@RedisHash(value = "jwt", timeToLive = 36000000)
+@RedisHash(value = "short_url", timeToLive = 1800)
 @Data
 @AllArgsConstructor
-public class JWT {
+public class ShortURL {
     @Id
     private String id;
+    private String token;
 }

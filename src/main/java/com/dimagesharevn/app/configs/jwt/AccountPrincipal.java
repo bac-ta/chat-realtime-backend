@@ -38,6 +38,7 @@ public class AccountPrincipal implements UserDetails, OAuth2User {
         principal.setUserName(user.getUsername());
         principal.setName(user.getName());
         principal.setAuthorities(authorities);
+        principal.setPassword(user.getBcryptedPassword());
 
         return principal;
     }
