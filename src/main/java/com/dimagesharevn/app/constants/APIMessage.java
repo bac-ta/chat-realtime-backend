@@ -5,7 +5,7 @@ public class APIMessage {
     public static final String PASSWORD_NOT_MATCH = "Password and confirm password not match";
     public static final String PASSWORD_NOT_BLANK = "Password must not blank";
     public static final String EMAIL_NOT_BLANK = "Email must not blank";
-    public static final String FIRST_NAME_NOT_BLANK = "First name must not blank";
+    public static final String NAME_NOT_BLANK = "Name must not blank";
     public static final String LAST_NAME_NOT_BLANK = "Last name must not blank";
     public static final String REPEAT_PASSWORD_NOT_BLANK = "Repeat password must not blank";
     public static final String USER_TYPE_NOT_EMPTY = "User type must not empty";
@@ -24,7 +24,7 @@ public class APIMessage {
     public static String RESOURCE_NOT_FOUND = "%s not found with %s : '%s'";
     public static final String LOGIN_SUCCESSFUL = "Login successful";
     public static final String LOGIN_FAILURE = "Login failure";
-    public static String ENDTRY_POINT_UNAUTHORIZED = "Responding with unauthorized error. Message - {}";
+    public static String ENDTRY_POINT_UNAUTHORIZED = "Responding with unauthorized error";
     public static final String ACCOUNT_INVALID = "Account invalid, please try again !";
     public static String OAUTH2_UNAUTHORIZED = "Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication";
     public static final String LOGOUT_SUCCESSFULL = "Logout successful";

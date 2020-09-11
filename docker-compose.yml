@@ -52,21 +52,21 @@ services:
       chatapp-network:
         ipv4_address: 172.22.0.4
 
-  # App config
-  chat-app:
-    image: "chat-app"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "1234:8080"
-    restart: always
-    depends_on:
-      - mysql_database
-      - redis
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.5
+#  # App config, this is development, so comment this service for app
+#  chat-app:
+#    image: "chat-app"
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "1234:8080"
+#    restart: always
+#    depends_on:
+#      - mysql_database
+#      - redis
+#    networks:
+#      chatapp-network:
+#        ipv4_address: 172.22.0.5
 
 volumes:
   db-data:

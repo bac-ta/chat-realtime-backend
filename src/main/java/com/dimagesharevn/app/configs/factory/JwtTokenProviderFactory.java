@@ -1,5 +1,6 @@
 package com.dimagesharevn.app.configs.factory;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 /**
@@ -7,7 +8,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface JwtTokenProviderFactory {
-    String generateToken(String username, String email, String name);
+    String generateToken(Authentication authentication);
 
     String getUsernameFromJWT(String token);
 

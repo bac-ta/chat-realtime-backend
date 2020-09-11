@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql_database:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://localhost:3307/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: chat-app
     password: dimagesharevn
     platform: mysql
@@ -11,7 +11,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -22,14 +22,20 @@ spring:
     allow-bean-definition-overriding: true
 
   redis:
-    host: 172.22.0.4
     port: 6379
-    cache:
-      redis:
-        time-to-live: 36000000
+    host: localhost
+
+  flyway:
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    enabled: true
+    schemas: chat-realtime-db
+    locations: classpath:db/migration
+    user: chat-app
+    password: dimagesharevn
 
 server:
-  port: 1234
+  port: 8080
   servlet:
     context-path: /api
 

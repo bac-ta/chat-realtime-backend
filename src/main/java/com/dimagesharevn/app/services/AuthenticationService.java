@@ -17,16 +17,21 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
     private JwtTokenProviderFactory jwtFactory;
-    private UserRepository userRepository;
     private JWTRepository jwtRepository;
+    private AuthenticationManager authManager;
     @Value("${openfire.xmpp-domain}")
     private String xmppDomain;
     @Value("${openfire.xmpp-client-connection-port}")
@@ -35,15 +40,16 @@ public class AuthenticationService {
     private String host;
 
     @Autowired
-    public AuthenticationService(JwtTokenProviderFactory jwtFactory, UserRepository userRepository, JWTRepository jwtRepository) {
+    public AuthenticationService(JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager, JWTRepository jwtRepository) {
         this.jwtFactory = jwtFactory;
-        this.userRepository = userRepository;
+        this.authManager = authManager;
         this.jwtRepository = jwtRepository;
     }
 
     public LoginResponse login(LoginRequest req) {
         String username = req.getUsername();
         String password = req.getPassword();
+        AbstractXMPPConnection conn2 = null;
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(username, password)
@@ -53,20 +59,33 @@ public class AuthenticationService {
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
 
-            AbstractXMPPConnection conn2 = new XMPPTCPConnection(config);
+            conn2 = new XMPPTCPConnection(config);
             conn2.connect().login();
-
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {
             throw new AuthenticationCredentialsNotFoundException("");
+        } finally {
+            if (conn2 != null)
+                conn2.disconnect();
         }
-        User user = userRepository.findByUsername(username).get();
-        String jwt = jwtFactory.generateToken(user.getUsername(), user.getEmail(), user.getName());
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtFactory.generateToken(authentication);
         jwtRepository.save(new JWT(jwt));
         return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
     }
 
     public void logout(String jwt) {
         jwtRepository.deleteById(jwt);
+    }
+
+    public Optional<JWT> findByKey(String key) {
+        return jwtRepository.findById(key);
     }
 
 }

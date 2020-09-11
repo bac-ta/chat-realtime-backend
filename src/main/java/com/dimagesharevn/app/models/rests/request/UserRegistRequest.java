@@ -13,8 +13,10 @@ import javax.validation.constraints.NotBlank;
 public class UserRegistRequest {
     @NotBlank(message = APIMessage.USER_NAME_NOT_BLANK)
     private String username;
+    @NotBlank(message = APIMessage.NAME_NOT_BLANK)
     private String name;
+    @NotBlank(message = APIMessage.EMAIL_NOT_BLANK)
     private String email;
-    @NotBlank
+    @NotBlank(message = APIMessage.PASSWORD_NOT_BLANK)
     private String password;
 }
