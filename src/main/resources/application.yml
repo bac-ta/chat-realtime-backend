@@ -22,11 +22,17 @@ spring:
     allow-bean-definition-overriding: true
 
   redis:
-    host: 172.22.0.4
     port: 6379
-    cache:
-      redis:
-        time-to-live: 36000000
+    host: 172.22.0.4
+
+  flyway:
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    enabled: true
+    schemas: chat-realtime-db
+    locations: classpath:db/migration
+    user: chat-app
+    password: dimagesharevn
 
 server:
   port: 1234
