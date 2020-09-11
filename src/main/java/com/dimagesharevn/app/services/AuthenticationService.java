@@ -17,7 +17,11 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -25,8 +29,8 @@ import java.io.IOException;
 @Service
 public class AuthenticationService {
     private JwtTokenProviderFactory jwtFactory;
-    private UserRepository userRepository;
     private JWTRepository jwtRepository;
+    private AuthenticationManager authManager;
     @Value("${openfire.xmpp-domain}")
     private String xmppDomain;
     @Value("${openfire.xmpp-client-connection-port}")
@@ -35,9 +39,9 @@ public class AuthenticationService {
     private String host;
 
     @Autowired
-    public AuthenticationService(JwtTokenProviderFactory jwtFactory, UserRepository userRepository, JWTRepository jwtRepository) {
+    public AuthenticationService(JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager, JWTRepository jwtRepository) {
         this.jwtFactory = jwtFactory;
-        this.userRepository = userRepository;
+        this.authManager = authManager;
         this.jwtRepository = jwtRepository;
     }
 
@@ -59,8 +63,15 @@ public class AuthenticationService {
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {
             throw new AuthenticationCredentialsNotFoundException("");
         }
-        User user = userRepository.findByUsername(username).get();
-        String jwt = jwtFactory.generateToken(user.getUsername(), user.getEmail(), user.getName());
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtFactory.generateToken(authentication);
         jwtRepository.save(new JWT(jwt));
         return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
     }

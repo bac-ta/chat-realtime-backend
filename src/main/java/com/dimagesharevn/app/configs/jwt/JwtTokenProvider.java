@@ -2,7 +2,6 @@ package com.dimagesharevn.app.configs.jwt;
 
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.ExceptionMessage;
-import com.dimagesharevn.app.enumerations.UserType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +12,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -32,15 +32,16 @@ public class JwtTokenProvider implements JwtTokenProviderFactory {
     private int expirationInMs;
 
     @Override
-    public String generateToken(String username, String name, String email) {
+    public String generateToken(Authentication authentication) {
+        AccountPrincipal principal = (AccountPrincipal) authentication.getPrincipal();
         Date dateNow = new Date();
         Date expiryDate = new Date(dateNow.getTime() + expirationInMs);
 
         Map<String, Object> claimMap = new HashMap<>();
-        claimMap.put("username", username);
-        claimMap.put("email", email);
-        claimMap.put("name", name);
-        claimMap.put("authority", UserType.MEMBER.name());
+        claimMap.put("username", principal.getUsername());
+        claimMap.put("email", principal.getEmail());
+        claimMap.put("authorities", principal.getAuthorities());
+        claimMap.put("name", principal.getName());
 
         return Jwts.builder().setClaims(claimMap).setIssuedAt(dateNow).
                 setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, clientSecrectKey).compact();
