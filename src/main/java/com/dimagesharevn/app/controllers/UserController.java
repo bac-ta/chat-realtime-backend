@@ -4,6 +4,7 @@ import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
+import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.services.UserService;
 import io.swagger.annotations.Api;
@@ -13,12 +14,15 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(APIEndpointBase.USER_ENDPOINT_BASE)
@@ -42,5 +46,10 @@ public class UserController {
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {
         UserRegistResponse response = userService.createUser(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserFindingResponse>> findUser(@RequestParam("text-search") String textSearch) {
+        return new ResponseEntity<>(userService.findUser(textSearch), HttpStatus.OK);
     }
 }
