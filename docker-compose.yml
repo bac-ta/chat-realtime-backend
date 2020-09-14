@@ -73,7 +73,6 @@ volumes:
   openfire-data:
   openfire-logs:
   redis-data:
-  mail-data:
 networks:
   chatapp-network:
     ipam:
