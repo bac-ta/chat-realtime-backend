@@ -3,7 +3,9 @@ package com.dimagesharevn.app.services;
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
+import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
+import com.dimagesharevn.app.models.dto.SessionDTO;
 import com.dimagesharevn.app.models.rests.request.LoginRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
@@ -31,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -86,24 +89,31 @@ public class AuthenticationService {
         ResponseEntity<SessionsResponse> responses = template.exchange(uri, HttpMethod.GET, httpEntity,
                 SessionsResponse.class, uriParam);
 
-        //If sessions not exist, we login
-        if (responses.getBody().getSessions().size() == 0) {
-            AbstractXMPPConnection conn2 = null;
-            try {
-                XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                        .setUsernameAndPassword(username, password)
-                        .setXmppDomain(xmppDomain)
-                        .setHost(host)
-                        .setPort(port)
-                        .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-                        .build();
+        SessionsResponse sessionsResponse = responses.getBody();
+        List<SessionDTO> dtoList = sessionsResponse.getSessions();
+        if (dtoList.size() > 0) {
 
-                conn2 = new XMPPTCPConnection(config);
-                conn2.connect().login();
-            } catch (InterruptedException | XMPPException | SmackException | IOException e) {
-                throw new AuthenticationCredentialsNotFoundException("");
+            for (SessionDTO sessionDTO : dtoList) {
+                if (sessionDTO.getSessionStatus().equals(SessionStatusType.AUTHENTICATED.name()))
+                    return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
             }
         }
+        //If sessions not exist, we login
+        try {
+            XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
+                    .setUsernameAndPassword(username, password)
+                    .setXmppDomain(xmppDomain)
+                    .setHost(host)
+                    .setPort(port)
+                    .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+                    .build();
+
+            AbstractXMPPConnection conn2 = new XMPPTCPConnection(config);
+            conn2.connect().login();
+        } catch (InterruptedException | XMPPException | SmackException | IOException e) {
+            throw new AuthenticationCredentialsNotFoundException("");
+        }
+
         return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
     }
 
