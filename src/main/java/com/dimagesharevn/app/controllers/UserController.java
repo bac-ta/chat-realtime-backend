@@ -4,6 +4,7 @@ import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
+import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.services.UserService;
@@ -49,8 +50,23 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "User api", notes = "Search user", response = SessionsResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = ""),
+    })
     @GetMapping("/search")
     public ResponseEntity<List<UserFindingResponse>> findUser(@RequestParam("text-search") String textSearch) {
         return new ResponseEntity<>(userService.findUser(textSearch), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "User api", notes = "Find online user", response = SessionsResponse.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = ""),
+    })
+    @GetMapping("/online")
+    public ResponseEntity<SessionsResponse> findOnlineUser() {
+        return new ResponseEntity<>(userService.findOnlineUser(), HttpStatus.OK);
     }
 }
