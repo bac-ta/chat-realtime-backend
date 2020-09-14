@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("UPDATE User SET bcryptedPassword=:bcryptedPassword WHERE username=:username")
     void saveBcryptedPassword(String username, String bcryptedPassword);
+
+    List<User> findByUsernameContaining(String textSearch);
 }

@@ -2,7 +2,9 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
+import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
+import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -38,5 +43,10 @@ public class UserService {
         template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users", requestBody, UserRegistRequest.class);
         userRepository.saveBcryptedPassword(request.getUsername(), passwordEncoder.encode(request.getPassword()));
         return new UserRegistResponse(request.getUsername(), APIMessage.REGIST_USER_SUCCESSFUL);
+    }
+
+    public List<UserFindingResponse> findUser(String textSearch) {
+        List<User> userList = userRepository.findByUsernameContaining(textSearch);
+        return userList.stream().map(user -> new UserFindingResponse(user.getUsername(), user.getEmail())).collect(Collectors.toList());
     }
 }
