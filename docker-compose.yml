@@ -52,24 +52,6 @@ services:
       chatapp-network:
         ipv4_address: 172.22.0.4
 
-  mail:
-    image: "axigen/axigen"
-    ports:
-    - "25:25"
-    - "465:465"
-    - "587:587"
-    - "9443:9443"
-    - "993:993"
-    - "995:995"
-    - "443:443"
-    - "7000:7000"
-    - "9000:9000"
-    volumes:
-    - mail-data:/var/opt/axigen
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.6
-
 #  # App config, this is development, so comment this service for app
 #  chat-app:
 #    image: "chat-app"
