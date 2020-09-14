@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: chat-app
-    password: dimagesharevn
+    url: jdbc:mysql://localhost:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
     platform: mysql
     initialization-mode: always
 
@@ -11,7 +11,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -31,8 +31,23 @@ spring:
     enabled: true
     schemas: chat-realtime-db
     locations: classpath:db/migration
-    user: chat-app
-    password: dimagesharevn
+    user: root
+    password: root
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: thanhcong.phung@gmail.com
+    password: tvmyfohskooligca
+    protocol: smtp
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
+      connectiontimeout: 5000
+      timeout: 5000
+      writetimeout: 5000
+
 
 server:
   port: 8080

@@ -13,12 +13,13 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.net.MalformedURLException;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(APIEndpointBase.USER_ENDPOINT_BASE)
@@ -42,5 +43,23 @@ public class UserController {
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {
         UserRegistResponse response = userService.createUser(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) throws MalformedURLException {
+
+        String response = userService.forgotPassword(email);
+
+        if (!response.startsWith("Invalid")) {
+            response = "http://localhost:8080/user/reset-password?token=" + response;
+        }
+        return new ResponseEntity<>(response, OK);
+    }
+
+    @PutMapping("/reset-password")
+    public String resetPassword(@RequestParam String token,
+                                @RequestParam String password) {
+
+        return userService.resetPassword(token, password);
     }
 }
