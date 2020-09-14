@@ -13,9 +13,11 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,8 +52,9 @@ public class AuthenticationController {
             @ApiResponse(code = 400, message = APIMessage.LOGOUT_FAILURE),
     })
     @DeleteMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestBody LogoutRequest req) {
-        authService.logout(req.getJwt());
+    public ResponseEntity<Void> logout(@RequestHeader(name = "Authorization") String bearerToken) {
+        String jwtToken = bearerToken.substring(7);
+        authService.logout(jwtToken);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

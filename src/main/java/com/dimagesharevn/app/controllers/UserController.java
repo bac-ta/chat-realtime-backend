@@ -41,6 +41,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = APIMessage.REGIST_USER_SUCCESSFUL),
             @ApiResponse(code = 400, message = APIMessage.REGIST_USER_FAIL),
+            @ApiResponse(code = 409, message = APIMessage.REGIST_USER_CONFLICT)
     })
     @PostMapping("/create")
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {

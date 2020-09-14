@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/auth/login", "/user/create").permitAll()
-                .antMatchers("/user/search").hasAuthority(UserType.MEMBER.name())
+                .antMatchers("/user/search", "/auth/logout").hasAuthority(UserType.MEMBER.name())
                 .anyRequest()
                 .authenticated();
         // Add our custom JWT security filter
