@@ -1,6 +1,7 @@
 package com.dimagesharevn.app.repositories;
 
 import com.dimagesharevn.app.models.entities.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +20,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("UPDATE User SET bcryptedPassword=:bcryptedPassword WHERE username=:username")
     void saveBcryptedPassword(String username, String bcryptedPassword);
 
-    List<User> findByUsernameContaining(String textSearch);
+    List<User> findByUsernameContainingIgnoreCase(String searchText, Pageable pageable);
 }

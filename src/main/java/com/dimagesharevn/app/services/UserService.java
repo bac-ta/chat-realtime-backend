@@ -12,6 +12,8 @@ import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,6 +31,9 @@ import java.util.stream.Collectors;
 public class UserService {
     @Value("${openfire.secret-key}")
     private String openfireSecretKey;
+    @Value("${app.query.record-limit}")
+    private Integer recordLimit;
+
     private UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -50,8 +55,9 @@ public class UserService {
         return new UserRegistResponse(request.getUsername(), APIMessage.REGIST_USER_SUCCESSFUL);
     }
 
-    public List<UserFindingResponse> findUser(String textSearch) {
-        List<User> userList = userRepository.findByUsernameContaining(textSearch);
+    public List<UserFindingResponse> findUser(String searchText, int start) {
+        Pageable pageable = PageRequest.of(start, recordLimit);
+        List<User> userList = userRepository.findByUsernameContainingIgnoreCase(searchText, pageable);
         return userList.stream().map(user -> new UserFindingResponse(user.getUsername(), user.getEmail())).collect(Collectors.toList());
     }
 
