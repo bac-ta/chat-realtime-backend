@@ -1,6 +1,7 @@
 package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
+import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.entities.Group;
 import com.dimagesharevn.app.models.rests.response.SearchResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
@@ -42,7 +43,7 @@ public class SearchController {
     @ApiOperation(value = "Search api", notes = "Search user, group", response = Object.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 400, message = "")
+            @ApiResponse(code = 404, message = APIMessage.SEARCH_TYPE_INVALID)
     })
     @GetMapping
     public ResponseEntity<SearchResponse> search(@ApiParam(name = "searchText", value = "search text input", defaultValue = "") @RequestParam(name = "searchText") String searchText,
