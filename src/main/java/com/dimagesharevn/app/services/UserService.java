@@ -31,22 +31,16 @@ import java.util.*;
 @Transactional
 public class UserService {
     private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
-    private final Random RANDOM = new SecureRandom();
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWYXZabcdefghijklmnopqrstuvwyxz";
-    private final MailService mailService;
 
     @Value("${openfire.secret-key}")
     private String openfireSecretKey;
     private UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    private Map<String, ShortenURL> shortenUrlList = new HashMap<>();
-
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, MailService mailService) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailService = mailService;
     }
 
     public UserRegistResponse createUser(UserRegistRequest request) throws HttpClientErrorException {
@@ -73,15 +67,9 @@ public class UserService {
         User user = userOptional.get();
         user.setToken(generateToken());
         user.setTokenCreateDate(LocalDateTime.now());
-        String longUrl = "http://localhost:8080/user/reset-password?token=" + user.getToken();
-        ShortenURL url = new ShortenURL();
-        url.setFullUrl(longUrl);
-        String randomChar = generateRandomString();
-        setShortUrl(randomChar, url);
+
         user = userRepository.save(user);
-        mailService.sendMail(new NotificationEmail("Please Activate your Account",
-                user.getEmail(), "Thank you for signing up to Spring Reddit, " +
-                "please click on the below url to reset your password : " + url.getShortUrl()));
+
         return user.getToken();
     }
 
@@ -98,7 +86,6 @@ public class UserService {
 
         if (isTokenExpired(tokenCreationDate)) {
             return "Token expired.";
-
         }
 
         User user = userOptional.get();
@@ -128,16 +115,4 @@ public class UserService {
         return diff.toMinutes() >= EXPIRE_TOKEN_AFTER_MINUTES;
     }
 
-    private String generateRandomString() {
-        StringBuilder returnValue = new StringBuilder(5);
-        for (int i = 0; i < 5; i++) {
-            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
-        }
-        return new String(returnValue);
-    }
-
-    private void setShortUrl(String randomChar, ShortenURL shortenUrl) throws MalformedURLException {
-        shortenUrl.setShortUrl("http://localhost:8080/s/" + randomChar);
-        shortenUrlList.put(randomChar, shortenUrl);
-    }
 }
