@@ -20,9 +20,7 @@ public class GroupUser implements Serializable {
     @Id
     private String groupName;
     @Column(length = 100)
-    @Id
     private String username;
-    @Id
     private byte administrator;
 
 }

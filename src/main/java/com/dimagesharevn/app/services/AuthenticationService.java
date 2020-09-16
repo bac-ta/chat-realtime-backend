@@ -1,6 +1,7 @@
 package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
+import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
@@ -139,6 +140,11 @@ public class AuthenticationService {
 
     public Optional<JWT> findByKey(String key) {
         return jwtRepository.findById(key);
+    }
+
+    public AccountPrincipal getCurrentPrincipal() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (AccountPrincipal) authentication.getPrincipal();
     }
 
 }
