@@ -9,5 +9,6 @@ public class APIEndpointBase {
     public static final String USER_ENDPOINT_BASE = "/user";
     public static final String SEARCH_ENDPOINT_BASE = "/search";
     public static final String GROUP_ENDPOINT_BASE = "/group";
-    public static final String GROUP_USER_ENPOINT_BASE ="/group-user";
+    public static final String GROUP_USER_ENPOINT_BASE = "/group-user";
+    public static final String CHAT_ENPOINT_BASE = "/chat";
 }

@@ -44,4 +44,8 @@ public class APIMessage {
     public static final String CREATE_GROUP_FAILURE = "Could not create a group";
     public static final String UPDATE_GROUP_SUCCESSFUL = "Update group successful";
     public static final String UPDATE_GROUP_FAILURE = "Could not update a group";
+
+    //Chat room
+    public static final String CREATE_CHAT_ROOM_SUCCESSFUL = "Create chat room successful";
+    public static final String CREATE_CHAT_ROOM_FAILURE = "Create chat room failure";
 }
