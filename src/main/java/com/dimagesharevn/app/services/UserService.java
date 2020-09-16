@@ -99,6 +99,20 @@ public class UserService {
         return "Your password successfully updated.";
     }
 
+    public String validateToken(String token){
+        Optional<User> userOptional = Optional
+                .ofNullable(userRepository.findByToken(token));
+        if (!userOptional.isPresent()) {
+            return "Invalid token.";
+        }
+
+        LocalDateTime tokenCreationDate = userOptional.get().getTokenCreateDate();
+
+        if (isTokenExpired(tokenCreationDate)) {
+            return "Token expired.";
+        }
+        return null;
+    }
     private String generateToken() {
         StringBuilder token = new StringBuilder();
 

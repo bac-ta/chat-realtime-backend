@@ -11,6 +11,7 @@ import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
 import com.dimagesharevn.app.services.MailService;
 import com.dimagesharevn.app.services.UserService;
+import com.sun.deploy.net.HttpResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -69,6 +70,7 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) throws MalformedURLException {
+        String response = userService.forgotPassword(email);
 
         Optional<User> userOptional = Optional
                 .ofNullable(userRepository.findByEmail(email));
@@ -88,7 +90,7 @@ public class UserController {
                 + "\nIf you did not request a new password, please let tell us know " +
                 "immediately by replying to this email."
                 + "\n\n\nYours," + "\nThe Dimageshare team"));
-        String response = userService.forgotPassword(email);
+
 
         if (!response.startsWith("Invalid")) {
             response = "http://localhost:8080/api/user/reset-password?token=" + response;
@@ -96,14 +98,22 @@ public class UserController {
         return new ResponseEntity<>(response, OK);
     }
 
-    @PutMapping("/reset-password")
-    public String resetPassword(@RequestParam String token,
-                                @RequestParam String password) {
-
-        return userService.resetPassword(token, password);
+    @GetMapping("/reset-password")
+    public void showChangePasswordPage(HttpServletResponse response, @RequestParam String token) throws IOException {
+        String result = userService.validateToken(token);
+        if (result != null) {
+            response.sendRedirect("https://www.google.com/");
+        }else{
+            response.sendRedirect("https://www.baeldung.com/spring-security-registration-i-forgot-my-password");
+        }
     }
 
-    @GetMapping("/reset-password?token=")
+//    @PutMapping("/reset-password")
+//    public String resetPassword(@RequestParam String token,
+//                                @RequestParam String password) {
+//
+//        return userService.resetPassword(token, password);
+//    }
 
 
     private void setShortUrl(String randomChar, ShortenURL shortenUrl) {
