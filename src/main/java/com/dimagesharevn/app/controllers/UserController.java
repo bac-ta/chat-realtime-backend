@@ -104,16 +104,16 @@ public class UserController {
         if (result != null) {
             response.sendRedirect("https://www.google.com/");
         }else{
-            response.sendRedirect("https://www.baeldung.com/spring-security-registration-i-forgot-my-password");
+            response.sendRedirect("http://localhost:4200/pre-auth/new-password?token="+token);
         }
     }
 
-//    @PutMapping("/reset-password")
-//    public String resetPassword(@RequestParam String token,
-//                                @RequestParam String password) {
-//
-//        return userService.resetPassword(token, password);
-//    }
+    @PutMapping("/reset-password")
+    public String resetPassword(@RequestParam String token,
+                                @RequestParam String password) {
+
+        return userService.resetPassword(token, password);
+    }
 
 
     private void setShortUrl(String randomChar, ShortenURL shortenUrl) {
