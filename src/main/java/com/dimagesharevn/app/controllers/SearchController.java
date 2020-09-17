@@ -2,10 +2,10 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.models.entities.Group;
+import com.dimagesharevn.app.models.rests.response.RoomResponse;
 import com.dimagesharevn.app.models.rests.response.SearchResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
-import com.dimagesharevn.app.services.GroupService;
+import com.dimagesharevn.app.services.RoomService;
 import com.dimagesharevn.app.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,12 +32,12 @@ import static com.dimagesharevn.app.enumerations.SearchType.findByValue;
 )
 public class SearchController {
     private UserService userService;
-    private GroupService groupService;
+    private RoomService roomService;
 
     @Autowired
-    public SearchController(UserService userService, GroupService groupService) {
+    public SearchController(UserService userService, RoomService roomService) {
         this.userService = userService;
-        this.groupService = groupService;
+        this.roomService = roomService;
     }
 
     @ApiOperation(value = "Search api", notes = "Search user, group", response = Object.class)
@@ -48,15 +48,15 @@ public class SearchController {
     @GetMapping
     public ResponseEntity<SearchResponse> search(@ApiParam(name = "searchText", value = "search text input", defaultValue = "") @RequestParam(name = "searchText") String searchText,
                                                  @ApiParam(name = "start", value = "start record pagging") @RequestParam(name = "start", defaultValue = "0", required = false) int start,
-                                                 @ApiParam(name = "searchType", value = "type of search  ex: 0 -> ALL, 1 -> USER, 2 -> GROUP") @RequestParam(name = "searchType", defaultValue = "0", required = false) int searchType) {
+                                                 @ApiParam(name = "searchType", value = "type of search  ex: 0 -> ALL, 1 -> USER, 2 -> ROOM") @RequestParam(name = "searchType", defaultValue = "0", required = false) int searchType) {
         //Validate
         findByValue(searchType);
 
         switch (findByValue(searchType)) {
             case ALL:
                 List<UserFindingResponse> userFindingResponses = userService.findUser(searchText, start);
-                List<Group> groupResponses = groupService.findGroup(searchText, start);
-                SearchResponse searchResponse = new SearchResponse(userFindingResponses, groupResponses);
+                List<RoomResponse> roomResponses = roomService.findRooms(searchText, start);
+                SearchResponse searchResponse = new SearchResponse(userFindingResponses, roomResponses);
                 return new ResponseEntity<>(searchResponse, HttpStatus.OK);
 
             case USER:
@@ -64,9 +64,9 @@ public class SearchController {
                 SearchResponse searchResponse2 = new SearchResponse(userFindingResponses2, new ArrayList<>());
                 return new ResponseEntity<>(searchResponse2, HttpStatus.OK);
 
-            case GROUP:
-                List<Group> groupResponses3 = groupService.findGroup(searchText, start);
-                SearchResponse searchResponse3 = new SearchResponse(new ArrayList<>(), groupResponses3);
+            case ROOM:
+                List<RoomResponse> roomResponses3 = roomService.findRooms(searchText, start);
+                SearchResponse searchResponse3 = new SearchResponse(new ArrayList<>(), roomResponses3);
                 return new ResponseEntity(searchResponse3, HttpStatus.OK);
             default:
                 return null;

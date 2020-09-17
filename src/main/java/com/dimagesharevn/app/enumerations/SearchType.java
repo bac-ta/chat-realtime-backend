@@ -9,7 +9,7 @@ import java.util.Arrays;
 public enum SearchType {
     ALL(0, "ALL"),
     USER(1, "USER"),
-    GROUP(2, "GROUP");
+    ROOM(2, "ROOM");
     @Getter
     private final int value;
     @Getter

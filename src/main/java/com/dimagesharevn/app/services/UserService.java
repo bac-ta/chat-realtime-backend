@@ -57,7 +57,7 @@ public class UserService {
 
     public List<UserFindingResponse> findUser(String searchText, int start) {
         Pageable pageable = PageRequest.of(start, recordLimit);
-        List<User> userList = userRepository.findByUsernameContainingIgnoreCase(searchText, pageable);
+        List<User> userList = userRepository.findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrEmailContainingIgnoreCase(searchText, searchText, searchText, pageable);
         return userList.stream().map(user -> new UserFindingResponse(user.getUsername(), user.getEmail())).collect(Collectors.toList());
     }
 
