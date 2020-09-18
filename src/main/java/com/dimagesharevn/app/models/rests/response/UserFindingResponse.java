@@ -8,4 +8,5 @@ import lombok.Data;
 public class UserFindingResponse {
     private String username;
     private String email;
+    private String name;
 }
