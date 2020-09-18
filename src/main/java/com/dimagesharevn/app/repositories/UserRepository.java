@@ -20,5 +20,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("UPDATE User SET bcryptedPassword=:bcryptedPassword WHERE username=:username")
     void saveBcryptedPassword(String username, String bcryptedPassword);
 
-    List<User> findByUsernameContainingIgnoreCase(String searchText, Pageable pageable);
+    List<User> findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String searchText, String searchText2, String searchText3, Pageable pageable);
 }

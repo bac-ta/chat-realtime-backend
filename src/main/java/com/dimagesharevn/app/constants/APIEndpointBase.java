@@ -11,4 +11,5 @@ public class APIEndpointBase {
     public static final String GROUP_ENDPOINT_BASE = "/group";
     public static final String GROUP_USER_ENPOINT_BASE = "/group-user";
     public static final String CHAT_ENPOINT_BASE = "/chat";
+    public static final String ROOM_ENDPOINT_BASE ="/room";
 }
