@@ -52,6 +52,9 @@ public class SearchController {
         //Validate
         findByValue(searchType);
 
+        if (searchText.equals(""))
+            return new ResponseEntity<>(new SearchResponse(new ArrayList<>(), new ArrayList<>()), HttpStatus.OK);
+
         switch (findByValue(searchType)) {
             case ALL:
                 List<UserFindingResponse> userFindingResponses = userService.findUser(searchText, start);
