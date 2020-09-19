@@ -1,0 +1,1 @@
+ALTER TABLE `chat-realtime-db`.`ofUser`  ADD COLUMN `tokenCreateDate` Timestamp NULL DEFAULT NULL AFTER `token`

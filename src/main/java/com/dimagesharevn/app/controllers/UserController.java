@@ -5,6 +5,8 @@ import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.caches.ShortenURL;
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.mail.NotificationEmail;
+import com.dimagesharevn.app.models.rests.request.NewPasswordRequest;
+import com.dimagesharevn.app.models.rests.request.ResetRequest;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
@@ -69,11 +71,11 @@ public class UserController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestParam String email) throws MalformedURLException {
-        String response = userService.forgotPassword(email);
+    public ResponseEntity<String> forgotPassword(@RequestBody ResetRequest resetRequest) throws MalformedURLException {
+        String response = userService.forgotPassword(resetRequest.getEmail());
 
         Optional<User> userOptional = Optional
-                .ofNullable(userRepository.findByEmail(email));
+                .ofNullable(userRepository.findByEmail(resetRequest.getEmail()));
         User user = userOptional.get();
 
         String longUrl = "http://localhost:8080/api/user/reset-password?token=" + user.getToken();
@@ -102,17 +104,16 @@ public class UserController {
     public void showChangePasswordPage(HttpServletResponse response, @RequestParam String token) throws IOException {
         String result = userService.validateToken(token);
         if (result != null) {
-            response.sendRedirect("https://www.google.com/");
-        }else{
-            response.sendRedirect("http://localhost:4200/pre-auth/new-password?token="+token);
+            response.sendRedirect("http://localhost:4200/404");
+        } else {
+            response.sendRedirect("http://localhost:4200/pre-auth/new-password?token=" + token);
         }
     }
 
     @PutMapping("/reset-password")
-    public String resetPassword(@RequestParam String token,
-                                @RequestParam String password) {
+    public String resetPassword(@RequestBody NewPasswordRequest request) {
 
-        return userService.resetPassword(token, password);
+        return userService.resetPassword(request.getResetToken(), request.getPassword());
     }
 
 

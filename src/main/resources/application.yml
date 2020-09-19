@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
-    username: root
-    password: root
+    url: jdbc:mysql://localhost:3307/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: chat-app
+    password: dimagesharevn
     platform: mysql
     initialization-mode: always
 
@@ -31,8 +31,8 @@ spring:
     enabled: true
     schemas: chat-realtime-db
     locations: classpath:db/migration
-    user: root
-    password: root
+    username: chat-app
+    password: dimagesharevn
 
   mail:
     host: smtp.gmail.com

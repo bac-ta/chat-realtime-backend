@@ -1,0 +1,1 @@
+ALTER TABLE `chat-realtime-db`.`ofUser`  ADD COLUMN `token` VARCHAR(250) NULL DEFAULT NULL AFTER `email`
