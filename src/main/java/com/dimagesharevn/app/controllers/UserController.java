@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @RequestMapping(APIEndpointBase.USER_ENDPOINT_BASE)
@@ -53,7 +54,7 @@ public class UserController {
             @ApiResponse(code = 400, message = ""),
     })
     @GetMapping("/online")
-    public ResponseEntity<SessionsResponse> findOnlineUser() {
+    public ResponseEntity<Set<String>> findOnlineUser() {
         return new ResponseEntity<>(userService.findOnlineUser(), HttpStatus.OK);
     }
 }
