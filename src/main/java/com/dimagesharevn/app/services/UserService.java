@@ -25,6 +25,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +62,7 @@ public class UserService {
         return userList.stream().map(user -> new UserFindingResponse(user.getUsername(), user.getEmail(), user.getName())).collect(Collectors.toList());
     }
 
-    public SessionsResponse findOnlineUser() {
+    public Set<String> findOnlineUser() {
         //Check session exist, if ok, don't need connect, else must connect
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -75,10 +76,12 @@ public class UserService {
         ResponseEntity<SessionsResponse> responses = template.exchange(uri, HttpMethod.GET, httpEntity,
                 SessionsResponse.class);
 
-        List<SessionDTO> sessionDTOList = responses.getBody().getSessions().stream()
+        Set<String> onlineUsers = responses.getBody().getSessions().stream()
                 .filter(sessionDTO -> sessionDTO.getSessionStatus().equals(SessionStatusType.AUTHENTICATED.getName()))
-                .collect(Collectors.toList());
+                .map(SessionDTO::getUsername)
+                .collect(Collectors.toSet());
 
-        return new SessionsResponse(sessionDTOList);
+
+        return onlineUsers;
     }
 }
