@@ -1,5 +1,6 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
@@ -37,11 +38,13 @@ public class UserService {
 
     private UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private AuthenticationService authenticationService;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationService authenticationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationService = authenticationService;
     }
 
     public UserRegistResponse createUser(UserRegistRequest request) throws HttpClientErrorException {
@@ -59,7 +62,9 @@ public class UserService {
     public List<UserFindingResponse> findUser(String searchText, int start) {
         Pageable pageable = PageRequest.of(start, recordLimit);
         List<User> userList = userRepository.findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrEmailContainingIgnoreCase(searchText, searchText, searchText, pageable);
-        return userList.stream().map(user -> new UserFindingResponse(user.getUsername(), user.getEmail(), user.getName())).collect(Collectors.toList());
+        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+        String currentUsername = principal.getUsername();
+        return userList.stream().filter(user -> !user.getUsername().equals(currentUsername)).map(user -> new UserFindingResponse(user.getUsername(), user.getEmail(), user.getName())).collect(Collectors.toList());
     }
 
     public Set<String> findOnlineUser() {
