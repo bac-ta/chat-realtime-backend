@@ -49,11 +49,13 @@ public class FileService {
             if (fileName.contains(".."))
                 throw new ResourceNotFoundExceptionHandler(APIMessage.FILE_INVALID_PATH_SEQUENCE + fileName);
             String fileTypeStr = FilenameUtils.getExtension(file.getOriginalFilename());
+
             //Check file type
             FileType.findByName(fileTypeStr);
             UUID uuid = UUID.randomUUID();
             logger.info("uuid:" + uuid.toString());
             String fileNameGen = uuid.toString().concat(".").concat(fileTypeStr);
+
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = fileStorageLocation.resolve(fileNameGen);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
