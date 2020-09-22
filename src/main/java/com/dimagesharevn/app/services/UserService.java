@@ -111,7 +111,7 @@ public class UserService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
-        ResponseEntity<RosterDTO> responses = restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/user/" + principal.getUsername() + "/roster",
+        ResponseEntity<RosterDTO> responses = restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + principal.getUsername() + "/roster",
                 HttpMethod.GET, entity, RosterDTO.class);
 
         return responses.getBody();
