@@ -2,6 +2,8 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
+import com.dimagesharevn.app.models.dtos.RosterDTO;
+import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +59,30 @@ public class UserController {
     @GetMapping("/online")
     public ResponseEntity<Set<String>> findOnlineUser() {
         return new ResponseEntity<>(userService.findOnlineUser(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Add friend", notes = "Add friend API")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = ""),
+            @ApiResponse(code = 409, message = "")
+    })
+
+    @PostMapping("/addFriend/{username}")
+    public ResponseEntity<Void> addFriend(@PathVariable("username") String username) {
+        RosterRequest rosterRequest = new RosterRequest(username);
+        userService.addFriend(rosterRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Get friends", notes = "Get friends API")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "", response = RosterDTO.class),
+            @ApiResponse(code = 400, message = "")
+    })
+
+    @GetMapping("/getFriends")
+    public ResponseEntity<RosterDTO> getFriends() {
+        RosterDTO rosterDTO = userService.getFriends();
+        return new ResponseEntity<>(rosterDTO, HttpStatus.OK);
     }
 }

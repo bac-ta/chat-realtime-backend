@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
         tags = "Chat API"
 )
 public class ChatController {
-    private ChatService chatService;
+    private final ChatService chatService;
 
     public ChatController(ChatService chatService) {
         this.chatService = chatService;
