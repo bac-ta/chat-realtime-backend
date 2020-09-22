@@ -4,7 +4,7 @@ import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
-import com.dimagesharevn.app.models.dto.SessionDTO;
+import com.dimagesharevn.app.models.dtos.SessionDTO;
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
