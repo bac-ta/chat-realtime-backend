@@ -3,7 +3,7 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.FileType;
-import com.dimagesharevn.app.models.property.FileStorageProperties;
+import com.dimagesharevn.app.models.property.AvatarStorageProperties;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -29,8 +29,8 @@ public class FileService {
     private static final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     @Autowired
-    public FileService(FileStorageProperties fileStorageProperties) {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getAvatar_name())
+    public FileService(AvatarStorageProperties avatarStorageProperties) {
+        this.fileStorageLocation = Paths.get(avatarStorageProperties.getAvatar_name())
                 .toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -48,15 +48,11 @@ public class FileService {
             // Check if the file's name contains invalid characters
             if (fileName.contains(".."))
                 throw new ResourceNotFoundExceptionHandler(APIMessage.FILE_INVALID_PATH_SEQUENCE + fileName);
-
             String fileTypeStr = FilenameUtils.getExtension(file.getOriginalFilename());
-
             //Check file type
             FileType.findByName(fileTypeStr);
-
             UUID uuid = UUID.randomUUID();
             logger.info("uuid:" + uuid.toString());
-
             String fileNameGen = uuid.toString().concat(".").concat(fileTypeStr);
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = fileStorageLocation.resolve(fileNameGen);
