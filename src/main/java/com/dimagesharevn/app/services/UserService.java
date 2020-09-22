@@ -3,7 +3,6 @@ package com.dimagesharevn.app.services;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
-import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.dtos.RosterDTO;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
 import com.dimagesharevn.app.models.entities.User;
@@ -13,6 +12,7 @@ import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -83,9 +83,8 @@ public class UserService {
         ResponseEntity<SessionsResponse> responses = template.exchange(uri, HttpMethod.GET, httpEntity,
                 SessionsResponse.class);
 
-
         return responses.getBody().getSessions().stream()
-                .filter(sessionDTO -> sessionDTO.getSessionStatus().equals(SessionStatusType.AUTHENTICATED.getName()))
+                .filter(sessionDTO -> !StringUtils.isBlank(sessionDTO.getHostAddress()))
                 .map(SessionDTO::getUsername)
                 .collect(Collectors.toSet());
     }
