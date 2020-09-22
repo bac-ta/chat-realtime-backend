@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.models.dto;
+package com.dimagesharevn.app.models.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

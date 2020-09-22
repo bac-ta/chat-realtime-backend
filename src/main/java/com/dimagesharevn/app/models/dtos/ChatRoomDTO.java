@@ -1,4 +1,4 @@
-package com.dimagesharevn.app.models.dto;
+package com.dimagesharevn.app.models.dtos;
 
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import lombok.AllArgsConstructor;
