@@ -12,7 +12,10 @@ import java.util.List;
 public class RosterDTO {
     private List<RosterItem> rosterItem;
 
-    class RosterItem {
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    static class RosterItem {
         private String jid;
         private String subscriptionType;
         private List<String> groups;
