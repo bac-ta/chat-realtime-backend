@@ -1,6 +1,6 @@
 package com.dimagesharevn.app.models.rests.request;
 
-import com.dimagesharevn.app.models.dto.MemberDTO;
+import com.dimagesharevn.app.models.dtos.MemberDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

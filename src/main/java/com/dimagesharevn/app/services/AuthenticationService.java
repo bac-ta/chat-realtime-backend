@@ -6,7 +6,7 @@ import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
-import com.dimagesharevn.app.models.dto.SessionDTO;
+import com.dimagesharevn.app.models.dtos.SessionDTO;
 import com.dimagesharevn.app.models.rests.request.LoginRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
