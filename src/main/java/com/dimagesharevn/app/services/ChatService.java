@@ -1,8 +1,13 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dto.ChatRoomDTO;
+import com.dimagesharevn.app.models.dto.HistoryDTO;
+import com.dimagesharevn.app.models.entities.MessageArchive;
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
+import com.dimagesharevn.app.repositories.MessageArchiveRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,10 +15,24 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ChatService {
     @Value("${openfire.secret-key}")
     private String openfireSecretKey;
+    private MessageArchiveRepository loadHistoryRepository;
+    private AuthenticationService authenticationService;
+    @Value("${openfire.xmpp-domain}")
+    private String domainName;
+
+    @Autowired
+    public ChatService(AuthenticationService authenticationService, MessageArchiveRepository loadHistoryRepository) {
+        this.authenticationService = authenticationService;
+        this.loadHistoryRepository = loadHistoryRepository;
+    }
 
     public void createChatRoom(ChatRoomRequest request) {
         RestTemplate template = new RestTemplate();
@@ -40,5 +59,14 @@ public class ChatService {
 
         template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/chatrooms/" + roomname + "/" + userRole + "/" + username,
                 requestBody, Object.class);
+    }
+
+    public List<HistoryDTO> loadHistory(String toJID, Long sentDate) {
+        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+        String userName = principal.getUsername();
+        String fromJID = userName + "@" + domainName;
+        List<MessageArchive> messageArchives = loadHistoryRepository.loadHistory(fromJID, toJID, sentDate);
+
+        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getBody(), messageArchive.getSentDate())).collect(Collectors.toList());
     }
 }
