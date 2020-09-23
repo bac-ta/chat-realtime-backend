@@ -4,7 +4,10 @@ package com.dimagesharevn.app.controllers;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.rests.response.FileResponse;
+import com.dimagesharevn.app.models.rests.response.ProfileResponse;
 import com.dimagesharevn.app.services.FileService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.text.translate.NumericEntityUnescaper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,9 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(APIEndpointBase.FILE_ENDPOINT_BASE)
+@Api(
+        tags = "File API"
+)
 public class FileController {
     private FileService fileService;
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
@@ -38,6 +44,7 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    @ApiOperation(value = "File api", notes = "Upload file", response = FileResponse.class)
     @PostMapping("/upload-file")
     public FileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileService.storeFile(file);
