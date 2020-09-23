@@ -11,4 +11,8 @@ public class ResourceNotFoundExceptionHandler extends RuntimeException {
     public ResourceNotFoundExceptionHandler(String message) {
         super(message);
     }
+
+    public ResourceNotFoundExceptionHandler(String message, Exception e) {
+        super(message, e);
+    }
 }
