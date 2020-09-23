@@ -166,7 +166,7 @@ public class UserService {
 
         User user = userOptional.get();
 
-        userRepository.saveBcryptedPassword(user.getUsername(), passwordEncoder.encode(password));
+        user.setBcryptedPassword(passwordEncoder.encode(password));
         user.setToken(null);
         user.setTokenCreateDate(null);
 
