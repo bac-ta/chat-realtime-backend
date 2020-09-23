@@ -121,7 +121,6 @@ public class UserController {
         Optional<User> userOptional = Optional
                 .ofNullable(userRepository.findByEmail(resetRequest.getEmail()));
         String response = userService.forgotPassword(userOptional);
-
         User user = userOptional.get();
 
         String longUrl = "http://localhost:8080/api/user/reset-password?token=" + user.getToken();
