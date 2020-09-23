@@ -34,6 +34,21 @@ spring:
     user: chat-app
     password: dimagesharevn
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: thanhcong.phung@gmail.com
+    password: tvmyfohskooligca
+    protocol: smtp
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
+      connectiontimeout: 5000
+      timeout: 5000
+      writetimeout: 5000
+
+
 server:
   port: 8080
   servlet:
@@ -51,3 +66,6 @@ app:
     token-expiration-msec: 36000000
   query:
     record-limit: 10
+  file-store:
+    avatar: /temp/profile
+    data: /temp/data
