@@ -30,8 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
 import javax.validation.constraints.NotBlank;
 import java.net.MalformedURLException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -133,10 +135,8 @@ public class UserService {
 
 
 
-    public String forgotPassword(String email) throws MalformedURLException {
+    public String forgotPassword(Optional<User> userOptional) {
 
-        Optional<User> userOptional = Optional
-                .ofNullable(userRepository.findByEmail(email));
 
         if (!userOptional.isPresent()) {
             return "Invalid email id.";
@@ -168,7 +168,7 @@ public class UserService {
 
         User user = userOptional.get();
 
-        userRepository.saveBcryptedPassword(user.getUsername(), passwordEncoder.encode(password));
+        user.setBcryptedPassword(passwordEncoder.encode(password));
         user.setToken(null);
         user.setTokenCreateDate(null);
 
