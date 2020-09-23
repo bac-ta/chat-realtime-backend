@@ -64,3 +64,5 @@ app:
   auth:
     token-secret: ZGltYWdlc2hhcmUtbGVnYWN5LWJhY2tlbmQtcHJvamVjdA==
     token-expiration-msec: 36000000
+  query:
+    record-limit: 10
