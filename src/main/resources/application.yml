@@ -11,7 +11,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -49,3 +49,5 @@ app:
   auth:
     token-secret: ZGltYWdlc2hhcmUtbGVnYWN5LWJhY2tlbmQtcHJvamVjdA==
     token-expiration-msec: 36000000
+  query:
+    record-limit: 10
