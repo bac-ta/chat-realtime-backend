@@ -33,7 +33,8 @@ public class APIMessage {
     //User
     public static final String REGIST_USER_SUCCESSFUL = "Regist user successful";
     public static final String REGIST_USER_FAIL = "Regist user fail";
-    public static final String REGIST_USER_CONFLICT = "Regist user fail because conflict";
+    public static final String REGIST_USER_FAIL_EMAIL = "This email is already taken";
+    public static final String REGIST_USER_CONFLICT = "This username is already taken";
     public static final String APPROVE_TYPE_INVALID = "Approve type invalidonflict";
     public static final String GENDER_TYPE_INVALID = "Gender type invalid";
     public static final String USER_TYPE_INVALID = "User type invalid";
@@ -48,4 +49,8 @@ public class APIMessage {
     //Chat room
     public static final String CREATE_CHAT_ROOM_SUCCESSFUL = "Create chat room successful";
     public static final String CREATE_CHAT_ROOM_FAILURE = "Create chat room failure";
+
+    //profile
+    public static final String UPDATE_PROFILE_SUCCESSFUL = "Update profile successful";
+    public static final String UPDATE_PROFILE_FAILURE = "Update profile failure";
 }

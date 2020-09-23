@@ -54,7 +54,7 @@ public class GlobalExceptionHandlerController extends ResponseEntityExceptionHan
                                                                        WebRequest request) {
         if (status == HttpStatus.CONFLICT) {
             Map object = new Gson().fromJson(ex.getResponseBodyAsString(), Map.class);
-            return handleExceptionInternal(ex, new APIErrorResponse(object.get("message").toString(), status.value()), status, request);
+            return handleExceptionInternal(ex, new APIErrorResponse(APIMessage.REGIST_USER_CONFLICT, status.value()), status, request);
         }
 
         return handleExceptionInternal(ex, new APIErrorResponse(ex.getMessage(), status.value()), status, request);

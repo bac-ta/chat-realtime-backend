@@ -66,3 +66,6 @@ app:
     token-expiration-msec: 36000000
   query:
     record-limit: 10
+  file-store:
+    avatar: /temp/profile
+    data: /temp/data

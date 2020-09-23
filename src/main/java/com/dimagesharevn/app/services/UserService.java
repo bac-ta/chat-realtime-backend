@@ -30,6 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
+import javax.validation.constraints.NotBlank;
+import java.net.MalformedURLException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,10 +63,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.authenticationService = authenticationService;
     }
-
     public UserRegistResponse createUser(UserRegistRequest request) throws HttpClientErrorException {
         RestTemplate template = new RestTemplate();
-
+        String email = request.getEmail();
+        if(userRepository.findByEmail(email) != null)
+            return new UserRegistResponse(null, APIMessage.REGIST_USER_FAIL_EMAIL);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", openfireSecretKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
