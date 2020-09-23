@@ -2,12 +2,19 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
+import com.dimagesharevn.app.models.caches.ShortenURL;
 import com.dimagesharevn.app.models.dtos.RosterDTO;
+import com.dimagesharevn.app.models.entities.User;
+import com.dimagesharevn.app.models.mail.NotificationEmail;
+import com.dimagesharevn.app.models.rests.request.NewPasswordRequest;
+import com.dimagesharevn.app.models.rests.request.ResetRequest;
 import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
+import com.dimagesharevn.app.repositories.UserRepository;
+import com.dimagesharevn.app.services.MailService;
 import com.dimagesharevn.app.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,12 +26,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequestMapping(APIEndpointBase.USER_ENDPOINT_BASE)
@@ -33,10 +50,16 @@ import java.util.Set;
 )
 public class UserController {
     private final UserService userService;
+    private final MailService mailService;
+    private final UserRepository userRepository;
+
+    private Map<String, ShortenURL> shortenUrlList = new HashMap<>();
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MailService mailService, UserRepository userRepository) {
         this.userService = userService;
+        this.mailService = mailService;
+        this.userRepository = userRepository;
     }
 
     @ApiOperation(value = "User api", notes = "Create user", response = LoginResponse.class)
@@ -84,5 +107,71 @@ public class UserController {
     public ResponseEntity<RosterDTO> getFriends() {
         RosterDTO rosterDTO = userService.getFriends();
         return new ResponseEntity<>(rosterDTO, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/s/{randomstring}")
+    public void getFullUrl(HttpServletResponse response, @PathVariable("randomstring") String randomString) throws IOException {
+        response.sendRedirect(shortenUrlList.get(randomString).getFullUrl());
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ResetRequest resetRequest) throws MalformedURLException {
+        String response = userService.forgotPassword(resetRequest.getEmail());
+
+        Optional<User> userOptional = Optional
+                .ofNullable(userRepository.findByEmail(resetRequest.getEmail()));
+        User user = userOptional.get();
+
+        String longUrl = "http://localhost:8080/api/user/reset-password?token=" + user.getToken();
+        ShortenURL url = new ShortenURL();
+        url.setFullUrl(longUrl);
+        String randomChar = getRandomChars();
+        setShortUrl(randomChar, url);
+
+        mailService.sendMail(new NotificationEmail("Forgotten password reset",
+                user.getEmail(), "Somebody (hopefully you) request a new password for the " +
+                "Dimageshare Chat App account for " +
+                user.getEmail() + ". No changes have been made to your account yet.\n\n" +
+                "You can reset your password by clicking the link below: " + url.getShortUrl()
+                + "\nIf you did not request a new password, please let tell us know " +
+                "immediately by replying to this email."
+                + "\n\n\nYours," + "\nThe Dimageshare team"));
+
+
+        if (!response.startsWith("Invalid")) {
+            response = "http://localhost:8080/api/user/reset-password?token=" + response;
+        }
+        return new ResponseEntity<>(response, OK);
+    }
+
+    @GetMapping("/reset-password")
+    public void showChangePasswordPage(HttpServletResponse response, @RequestParam String token) throws IOException {
+        String result = userService.validateToken(token);
+        if (result != null) {
+            response.sendRedirect("http://localhost:4200/404");
+        } else {
+            response.sendRedirect("http://localhost:4200/pre-auth/new-password?token=" + token);
+        }
+    }
+
+    @PutMapping("/reset-password")
+    public String resetPassword(@RequestBody NewPasswordRequest request) {
+
+        return userService.resetPassword(request.getResetToken(), request.getPassword());
+    }
+
+
+    private void setShortUrl(String randomChar, ShortenURL shortenUrl) {
+        shortenUrl.setShortUrl("http://localhost:8080/api/user/s/" + randomChar);
+        shortenUrlList.put(randomChar, shortenUrl);
+    }
+
+    private String getRandomChars() {
+        String randomStr = "";
+        String possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (int i = 0; i < 5; i++)
+            randomStr += possibleChars.charAt((int) Math.floor(Math.random() * possibleChars.length()));
+        return randomStr;
     }
 }

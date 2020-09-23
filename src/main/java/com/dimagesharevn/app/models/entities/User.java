@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "ofUser")
@@ -46,6 +49,12 @@ public class User {
     @Column
     @ApiModelProperty(notes = "Email of user")
     private String email;
+    @Column
+    @ApiModelProperty(notes = "Token after create reset request")
+    private String token;
+    @Column(columnDefinition = "TIMESTAMP")
+    @ApiModelProperty(notes = "Date create token")
+    private LocalDateTime tokenCreateDate;
     @Column
     @ApiModelProperty(notes = "Bcrypted password")
     private String bcryptedPassword;
