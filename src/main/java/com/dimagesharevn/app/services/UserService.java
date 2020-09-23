@@ -6,12 +6,14 @@ import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.dtos.RosterDTO;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
 import com.dimagesharevn.app.models.entities.User;
+import com.dimagesharevn.app.models.rests.request.PasswordResetRequest;
 import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.models.rests.request.UserRegistRequest;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,24 +27,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import sun.plugin2.message.ShowDocumentMessage;
 
 import java.net.MalformedURLException;
-import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import com.dimagesharevn.app.models.caches.ShortenURL;
-import com.dimagesharevn.app.models.entities.User;
-import com.dimagesharevn.app.models.mail.NotificationEmail;
-import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
@@ -176,6 +171,17 @@ public class UserService {
         user.setTokenCreateDate(null);
 
         userRepository.save(user);
+
+        //update encrypted password
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", openfireSecretKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        PasswordResetRequest resetRequest = new PasswordResetRequest(password);
+        HttpEntity<PasswordResetRequest> entity = new HttpEntity<>(resetRequest, headers);
+        restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + user.getUsername(),
+                HttpMethod.PUT, entity, PasswordResetRequest.class);
 
         return "Your password successfully updated.";
     }
