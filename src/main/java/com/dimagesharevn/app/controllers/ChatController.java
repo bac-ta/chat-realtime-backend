@@ -6,6 +6,7 @@ import com.dimagesharevn.app.models.dto.HistoryDTO;
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.services.ChatService;
+import com.dimagesharevn.app.services.RoomService;
 import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,9 +25,11 @@ import java.util.List;
 )
 public class ChatController {
     private final ChatService chatService;
+    private final RoomService roomService;
 
-    public ChatController(ChatService chatService) {
+    public ChatController(ChatService chatService, RoomService roomService) {
         this.chatService = chatService;
+        this.roomService = roomService;
     }
 
     @ApiOperation(value = "Create a chat room API", notes = "Create chat")
@@ -49,7 +52,7 @@ public class ChatController {
     public ResponseEntity<Void> addUserWithRoleToChatRoom(@PathVariable(name = "roomname") String roomname,
                                                           @PathVariable(name = "userRole") String userRole,
                                                           @PathVariable(name = "username") String username) {
-        chatService.addUserWithRoleToChatRoom(roomname, userRole, username);
+        roomService.addUserWithRoleToChatRoom(roomname, userRole, username);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
