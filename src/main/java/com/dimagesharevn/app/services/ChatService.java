@@ -2,11 +2,12 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
-import com.dimagesharevn.app.models.dto.ChatRoomDTO;
+import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
 import com.dimagesharevn.app.models.entities.MessageArchive;
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import com.dimagesharevn.app.repositories.MessageArchiveRepository;
+import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,7 @@ public class ChatService {
         this.authenticationService = authenticationService;
         this.loadHistoryRepository = loadHistoryRepository;
     }
+
 
     public void createChatRoom(ChatRoomRequest request) {
         RestTemplate template = new RestTemplate();
@@ -61,6 +62,19 @@ public class ChatService {
                 requestBody, Object.class);
     }
 
+    public void addFriend(RosterRequest request) {
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", openfireSecretKey);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<RosterRequest> requestBody = new HttpEntity<>(request, headers);
+
+        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+
+        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + principal.getUsername() + "/roster",
+                requestBody, Object.class);
+    }
+
     public List<HistoryDTO> loadHistory(String toJID, Long sentDate) {
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
@@ -69,4 +83,5 @@ public class ChatService {
 
         return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getBody(), messageArchive.getSentDate())).collect(Collectors.toList());
     }
+
 }
