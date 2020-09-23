@@ -33,6 +33,7 @@ public class APIMessage {
     //User
     public static final String REGIST_USER_SUCCESSFUL = "Regist user successful";
     public static final String REGIST_USER_FAIL = "Regist user fail";
+    public static final String REGIST_USER_FAIL_EMAIL = "This email is already taken";
     public static final String REGIST_USER_CONFLICT = "This username is already taken";
     public static final String APPROVE_TYPE_INVALID = "Approve type invalidonflict";
     public static final String GENDER_TYPE_INVALID = "Gender type invalid";
