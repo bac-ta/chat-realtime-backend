@@ -48,4 +48,8 @@ public class APIMessage {
     //Chat room
     public static final String CREATE_CHAT_ROOM_SUCCESSFUL = "Create chat room successful";
     public static final String CREATE_CHAT_ROOM_FAILURE = "Create chat room failure";
+
+    //profile
+    public static final String UPDATE_PROFILE_SUCCESSFUL = "Update profile successful";
+    public static final String UPDATE_PROFILE_FAILURE = "Update profile failure";
 }
