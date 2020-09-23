@@ -1,5 +1,6 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.entities.Profile;
 import com.dimagesharevn.app.models.rests.request.ProfileRequest;
@@ -13,17 +14,18 @@ import java.util.Optional;
 @Service
 public class ProfileService {
     private ProfileRepository profileRepository;
-    private FileService fileService;
+    private final AuthenticationService authenticationService;
 
     @Autowired
-    public ProfileService(ProfileRepository profileRepository, FileService fileService){
+    public ProfileService(ProfileRepository profileRepository, AuthenticationService authenticationService){
         this.profileRepository= profileRepository;
-        this.fileService = fileService;
+        this.authenticationService = authenticationService;
     }
 
 
-    public ProfileResponse editProfile(ProfileRequest request, String username){
-        Optional<Profile> profileOptional = profileRepository.findById(username);
+    public ProfileResponse editProfile(ProfileRequest request){
+        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+        Optional<Profile> profileOptional = profileRepository.findById(principal.getUsername());
         if(profileOptional.isPresent()){
             Profile profile = profileOptional.get();
             profile.setName(request.getName());
