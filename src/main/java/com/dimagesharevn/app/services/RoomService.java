@@ -23,7 +23,7 @@ public class RoomService {
     private RoomRepository roomRepository;
     @Value("${app.query.record-limit}")
     private Integer recordLimit;
-    @Value("${app.secret-key}")
+    @Value("${openfire.secret-key}")
     private String openfireSecretKey;
 
     @Autowired

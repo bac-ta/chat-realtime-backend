@@ -168,13 +168,6 @@ public class UserService {
 
         User user = userOptional.get();
 
-        user.setBcryptedPassword(passwordEncoder.encode(password));
-        user.setToken(null);
-        user.setTokenCreateDate(null);
-
-        userRepository.save(user);
-
-        //update encrypted password
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", openfireSecretKey);
@@ -184,6 +177,8 @@ public class UserService {
         HttpEntity<PasswordResetRequest> entity = new HttpEntity<>(resetRequest, headers);
         restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + user.getUsername(),
                 HttpMethod.PUT, entity, PasswordResetRequest.class);
+
+        userRepository.updateUserForgotInfo(passwordEncoder.encode(password), token);
 
         return "Your password successfully updated.";
     }
