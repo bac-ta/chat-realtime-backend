@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class HistoryDTO {
-    private String body;
+    private Long messageID;
+    private Long conversationID;
     private Long sentDate;
+    private String body;
 }

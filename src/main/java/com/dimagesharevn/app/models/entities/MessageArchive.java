@@ -19,6 +19,8 @@ public class MessageArchive {
     @Column
     private Long messageID;
     @Column
+    private Long conversationID;
+    @Column
     private String fromJID;
     @Column
     private String toJID;
@@ -26,4 +28,5 @@ public class MessageArchive {
     private Long sentDate;
     @Column
     private String body;
+
 }

@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 public class ChatService {
     @Value("${openfire.secret-key}")
     private String openfireSecretKey;
-    private MessageArchiveRepository loadHistoryRepository;
-    private AuthenticationService authenticationService;
+    private final MessageArchiveRepository loadHistoryRepository;
+    private final AuthenticationService authenticationService;
     @Value("${openfire.xmpp-domain}")
     private String domainName;
 
@@ -79,9 +79,12 @@ public class ChatService {
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
         String fromJID = userName + "@" + domainName;
-        List<MessageArchive> messageArchives = loadHistoryRepository.loadHistory(fromJID, toJID, sentDate);
-
-        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getBody(), messageArchive.getSentDate())).collect(Collectors.toList());
+        List<MessageArchive> messageArchives;
+        if (sentDate == null)
+            messageArchives = loadHistoryRepository.loadHistoryFirst(fromJID, toJID);
+        else
+            messageArchives = loadHistoryRepository.loadHistoryNext(fromJID, toJID, sentDate);
+        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getMessageID(), messageArchive.getConversationID(), messageArchive.getSentDate(), messageArchive.getBody())).collect(Collectors.toList());
     }
 
 }
