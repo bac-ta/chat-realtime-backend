@@ -67,3 +67,9 @@ Stop all:
 $ docker-compose stop
 
 ```
+
+##Config openfire 
+* Opentab "Server -> Server Manager -> System Properties" and config:
+```bash
+route.all-resources = true
+```
