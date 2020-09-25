@@ -14,7 +14,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
+
     User findByEmail(String email);
+
     User findByToken(String token);
 
     @Transactional
@@ -23,4 +25,9 @@ public interface UserRepository extends JpaRepository<User, String> {
     void saveBcryptedPassword(String username, String bcryptedPassword);
 
     List<User> findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrEmailContainingIgnoreCase(String searchText, String searchText2, String searchText3, Pageable pageable);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User SET bcryptedPassword=:bcryptedPassword, token=null, tokenCreateDate =null WHERE token=:token")
+    void updateUserForgotInfo(String bcryptedPassword, String token);
 }

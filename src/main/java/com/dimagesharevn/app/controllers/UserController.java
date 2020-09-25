@@ -20,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,6 +72,7 @@ public class UserController {
     @PostMapping("/create")
     public ResponseEntity<UserRegistResponse> createUser(@Valid @RequestBody UserRegistRequest request) {
         UserRegistResponse response = userService.createUser(request);
+        if (StringUtils.isBlank(response.getUsername())) return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -117,10 +119,10 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody ResetRequest resetRequest) throws MalformedURLException {
-        String response = userService.forgotPassword(resetRequest.getEmail());
 
         Optional<User> userOptional = Optional
                 .ofNullable(userRepository.findByEmail(resetRequest.getEmail()));
+        String response = userService.forgotPassword(userOptional);
         User user = userOptional.get();
 
         String longUrl = "http://localhost:8080/api/user/reset-password?token=" + user.getToken();
