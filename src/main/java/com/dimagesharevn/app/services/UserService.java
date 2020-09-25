@@ -30,8 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+
 import javax.validation.constraints.NotBlank;
 import java.net.MalformedURLException;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -133,10 +135,8 @@ public class UserService {
 
 
 
-    public String forgotPassword(String email) throws MalformedURLException {
+    public String forgotPassword(Optional<User> userOptional) {
 
-        Optional<User> userOptional = Optional
-                .ofNullable(userRepository.findByEmail(email));
 
         if (!userOptional.isPresent()) {
             return "Invalid email id.";
@@ -168,13 +168,6 @@ public class UserService {
 
         User user = userOptional.get();
 
-        userRepository.saveBcryptedPassword(user.getUsername(), passwordEncoder.encode(password));
-        user.setToken(null);
-        user.setTokenCreateDate(null);
-
-        userRepository.save(user);
-
-        //update encrypted password
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", openfireSecretKey);
@@ -184,6 +177,8 @@ public class UserService {
         HttpEntity<PasswordResetRequest> entity = new HttpEntity<>(resetRequest, headers);
         restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + user.getUsername(),
                 HttpMethod.PUT, entity, PasswordResetRequest.class);
+
+        userRepository.updateUserForgotInfo(passwordEncoder.encode(password), token);
 
         return "Your password successfully updated.";
     }
