@@ -2,6 +2,7 @@ package com.dimagesharevn.app.configs;
 
 import com.dimagesharevn.app.configs.jwt.JwtAuthenticationEntryPoint;
 import com.dimagesharevn.app.configs.jwt.JwtAuthenticationFilter;
+import com.dimagesharevn.app.enumerations.UserType;
 import com.dimagesharevn.app.services.UserDetailsImplService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -56,8 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource()
-    {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -82,7 +82,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/login", "/user/create").permitAll()
+                .antMatchers("/auth/login", "/user/create", "/user/forgot-password", "/user/reset-password", "/user/s/**").permitAll()
+                .antMatchers("/user/search", "/auth/logout", "/user/online", "/search", "/user/addFriend/**", "/user/getFriends",
+                        "/room/getRooms", "/room/addUser/**").hasAuthority(UserType.MEMBER.name())
                 .anyRequest()
                 .authenticated();
         // Add our custom JWT security filter

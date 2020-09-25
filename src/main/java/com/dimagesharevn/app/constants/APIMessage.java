@@ -31,26 +31,26 @@ public class APIMessage {
     public static final String LOGOUT_FAILURE = "Logout failure";
 
     //User
-    public static final String REGIST_USER_SUCCESSFUL = "Regist user succesful";
-    public static final String REGIST_USER_FAIL = "Regist user fail because conflict";
+    public static final String REGIST_USER_SUCCESSFUL = "Regist user successful";
+    public static final String REGIST_USER_FAIL = "Regist user fail";
+    public static final String REGIST_USER_FAIL_EMAIL = "This email is already taken";
+    public static final String REGIST_USER_CONFLICT = "This username is already taken";
     public static final String APPROVE_TYPE_INVALID = "Approve type invalidonflict";
     public static final String GENDER_TYPE_INVALID = "Gender type invalid";
     public static final String USER_TYPE_INVALID = "User type invalid";
-    public static final String OAUTH2_TYPE_INVALID = "OAuth2 type invalid";
+    public static final String SEARCH_TYPE_INVALID = "Search type invalid";
 
-    //Post
-    public static final String POST_ID_INVALID = "Post id not valid";
-    public static final String CREATE_POST_FAILURE = "Create post failure";
-    public static final String CREATE_POST_SUCCESSFUL = "Create post successful";
-    public static final String UPDATE_POST_FAILURE = "Update post failure";
-    public static final String UPDATE_POST_SUCCESSFUL = "Update post successful";
-    public static final String PUBLISH_TYPE_INVALID = "Publish type invalid";
-    public static final String POST_TITLE_EXIST = "Post title exist, please try again with other title";
-    public static final String POST_NOT_FOUND = "Post not found";
+    //Group
+    public static final String CREATE_GROUP_SUCCESSFUL = "Create group successful";
+    public static final String CREATE_GROUP_FAILURE = "Could not create a group";
+    public static final String UPDATE_GROUP_SUCCESSFUL = "Update group successful";
+    public static final String UPDATE_GROUP_FAILURE = "Could not update a group";
 
-    //Category
-    public static final String CREATE_CATEGORY_SUCCESSFUL = "Create category successful";
-    public static final String CREATE_CATEGORY_FAILURE = "Create category failure";
-    public static final String CATEGORY_TYPE_INVALID = "Category type invalid";
-    public static final String CATEGORY_ID_NOT_EXIST = "Category Id not exist";
+    //Chat room
+    public static final String CREATE_CHAT_ROOM_SUCCESSFUL = "Create chat room successful";
+    public static final String CREATE_CHAT_ROOM_FAILURE = "Create chat room failure";
+
+    //profile
+    public static final String UPDATE_PROFILE_SUCCESSFUL = "Update profile successful";
+    public static final String UPDATE_PROFILE_FAILURE = "Update profile failure";
 }
