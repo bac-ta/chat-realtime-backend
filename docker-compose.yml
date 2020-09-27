@@ -1,56 +1,56 @@
 version: '3.3'
 services:
-
-  # Database Service (Mysql)
-  mysql_database:
-    image: mysql:8
-    ports:
-      - "3307:3306"
-    restart: always
-    environment:
-      MYSQL_DATABASE: chat-realtime-db
-      MYSQL_USER: chat-app
-      MYSQL_PASSWORD: dimagesharevn
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - db-data:/var/lib/mysql
-    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.2
-
-  # Openfire
-  openfire:
-    image: quantumobject/docker-openfire
-    ports:
-      - "9090:9090/tcp"
-      - "9091:9091/tcp"
-      - "5222:5222/tcp"
-      - "7777:7777/tcp"
-      - "7070:7070/tcp"
-    volumes:
-      - openfire-data:/var/lib/openfire
-      - openfire-logs:/var/log/openfire
-    links:
-      - mysql_database
-    depends_on:
-      - mysql_database
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.3
-
-  # Redis
-  redis:
-    image: "redis:alpine"
-    hostname: redis-host
-    ports:
-      - "6379:6379"
-    command: [ "redis-server", "--protected-mode", "no" ]
-    volumes:
-      - redis-data:/var/lib/redis
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.4
+#
+#  # Database Service (Mysql)
+#  mysql_database:
+#    image: mysql:8
+#    ports:
+#      - "3307:3306"
+#    restart: always
+#    environment:
+#      MYSQL_DATABASE: chat-realtime-db
+#      MYSQL_USER: chat-app
+#      MYSQL_PASSWORD: dimagesharevn
+#      MYSQL_ROOT_PASSWORD: root
+#    volumes:
+#      - db-data:/var/lib/mysql
+#    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci' ]
+#    networks:
+#      chatapp-network:
+#        ipv4_address: 172.22.0.2
+#
+#  # Openfire
+#  openfire:
+#    image: quantumobject/docker-openfire
+#    ports:
+#      - "9090:9090/tcp"
+#      - "9091:9091/tcp"
+#      - "5222:5222/tcp"
+#      - "7777:7777/tcp"
+#      - "7070:7070/tcp"
+#    volumes:
+#      - openfire-data:/var/lib/openfire
+#      - openfire-logs:/var/log/openfire
+#    links:
+#      - mysql_database
+#    depends_on:
+#      - mysql_database
+#    networks:
+#      chatapp-network:
+#        ipv4_address: 172.22.0.3
+#
+#  # Redis
+#  redis:
+#    image: "redis:alpine"
+#    hostname: redis-host
+#    ports:
+#      - "6379:6379"
+#    command: [ "redis-server", "--protected-mode", "no" ]
+#    volumes:
+#      - redis-data:/var/lib/redis
+#    networks:
+#      chatapp-network:
+#        ipv4_address: 172.22.0.4
 
   # App config
   chat-app:
@@ -61,21 +61,21 @@ services:
     ports:
       - "1234:8080"
     restart: always
-    depends_on:
-      - mysql_database
-      - redis
-    networks:
-      chatapp-network:
-        ipv4_address: 172.22.0.5
+#    depends_on:
+#      - mysql_database
+#      - redis
+#    networks:
+#      chatapp-network:
+#        ipv4_address: 172.22.0.5
 
-volumes:
-  db-data:
-  openfire-data:
-  openfire-logs:
-  redis-data:
-networks:
-  chatapp-network:
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/16
+#volumes:
+#  db-data:
+#  openfire-data:
+#  openfire-logs:
+#  redis-data:
+#networks:
+#  chatapp-network:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 172.22.0.0/16
