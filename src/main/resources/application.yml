@@ -31,8 +31,8 @@ spring:
     enabled: true
     schemas: chat-realtime-db
     locations: classpath:db/migration
-    user: root
-    password: Silencer&&55
+#    user: root
+#    password: Silencer&&55
 
   mail:
     host: smtp.gmail.com
