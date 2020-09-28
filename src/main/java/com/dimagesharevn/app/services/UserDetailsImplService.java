@@ -17,7 +17,7 @@ import java.util.Optional;
  */
 @Service
 public class UserDetailsImplService implements UserDetailsService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserDetailsImplService(UserRepository userRepository) {
@@ -28,8 +28,6 @@ public class UserDetailsImplService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepository.findByUsername(username);
-        if (optionalUser.isPresent())
-            return AccountPrincipal.create(optionalUser.get());
-        return null;
+        return optionalUser.map(AccountPrincipal::create).orElse(null);
     }
 }

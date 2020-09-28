@@ -3,7 +3,6 @@ package com.dimagesharevn.app.services;
 import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.dtos.RosterDTO;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
@@ -46,8 +45,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
-    private OpenfireComponentFactory oFFactory;
-    private AppComponentFactory appFactory;
+    private final OpenfireComponentFactory oFFactory;
+    private final AppComponentFactory appFactory;
 
     @Autowired
     public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
@@ -69,7 +68,7 @@ public class UserService {
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserRegistRequest> requestBody = new HttpEntity<>(request, headers);
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users", requestBody, UserRegistRequest.class);
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/users", requestBody, UserRegistRequest.class);
         userRepository.saveBcryptedPassword(request.getUsername(), passwordEncoder.encode(request.getPassword()));
         return new UserRegistResponse(request.getUsername(), APIMessage.REGIST_USER_SUCCESSFUL);
     }
@@ -90,7 +89,7 @@ public class UserService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        String uri = APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/sessions";
+        String uri = oFFactory.getOpenfireRestApiEndPointBase() + "/sessions";
 
 
         ResponseEntity<SessionsResponse> responses = template.exchange(uri, HttpMethod.GET, httpEntity,
@@ -111,7 +110,7 @@ public class UserService {
 
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
 
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + principal.getUsername() + "/roster",
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/users/" + principal.getUsername() + "/roster",
                 requestBody, Object.class);
     }
 
@@ -123,7 +122,7 @@ public class UserService {
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
-        ResponseEntity<RosterDTO> responses = restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + principal.getUsername() + "/roster",
+        ResponseEntity<RosterDTO> responses = restTemplate.exchange(oFFactory.getOpenfireRestApiEndPointBase() + "/users/" + principal.getUsername() + "/roster",
                 HttpMethod.GET, entity, RosterDTO.class);
 
         return responses.getBody();
@@ -171,7 +170,7 @@ public class UserService {
 
         PasswordResetRequest resetRequest = new PasswordResetRequest(password);
         HttpEntity<PasswordResetRequest> entity = new HttpEntity<>(resetRequest, headers);
-        restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + user.getUsername(),
+        restTemplate.exchange(oFFactory.getOpenfireRestApiEndPointBase() + "/users/" + user.getUsername(),
                 HttpMethod.PUT, entity, PasswordResetRequest.class);
 
         userRepository.updateUserForgotInfo(passwordEncoder.encode(password), token);
