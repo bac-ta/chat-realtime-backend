@@ -16,6 +16,8 @@ public class OpenfireComponentImpl implements OpenfireComponentFactory {
     private Integer xmppClientBinPort;
     @Value("${openfire.host}")
     private String host;
+    @Value("${openfire.port}")
+    private Integer port;
 
 
     @Override
@@ -41,5 +43,17 @@ public class OpenfireComponentImpl implements OpenfireComponentFactory {
     @Override
     public String getHost() {
         return host;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
+    }
+
+    @Override
+    public String getOpenfireRestApiEndPointBase() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("http://").append(getHost()).append(":").append(getPort()).append("/plugins/restapi/v1");
+        return builder.toString();
     }
 }

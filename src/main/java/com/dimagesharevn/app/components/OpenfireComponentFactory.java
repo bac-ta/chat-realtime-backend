@@ -13,4 +13,8 @@ public interface OpenfireComponentFactory {
     Integer getXmppClientBinPort();
 
     String getHost();
+
+    Integer getPort();
+
+    String getOpenfireRestApiEndPointBase();
 }

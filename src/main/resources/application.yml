@@ -60,7 +60,7 @@ openfire:
   xmpp-client-connection-port: 5222
   xmpp-domain: dimagesharevn.develop
   xmpp-client-bin-port: 9090
-
+  port: 9090
 
 app:
   auth:
@@ -69,5 +69,5 @@ app:
   query:
     record-limit: 10
   file-store:
-    avatar: /temp/profile
-    data: /temp/data
+    avatar: /tmp/profile
+    data: /tmp/data

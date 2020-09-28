@@ -2,7 +2,6 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.entities.Room;
 import com.dimagesharevn.app.models.rests.response.RoomResponse;
@@ -22,9 +21,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
-    private RoomRepository roomRepository;
-    private AppComponentFactory appFactory;
-    private OpenfireComponentFactory oFFactory;
+    private final RoomRepository roomRepository;
+    private final AppComponentFactory appFactory;
+    private final OpenfireComponentFactory oFFactory;
 
 
     @Autowired
@@ -49,7 +48,7 @@ public class RoomService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(headers);
 
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/chatrooms/" + roomname + "/" + userRole + "/" + username,
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + username,
                 requestBody, Object.class);
     }
 }
