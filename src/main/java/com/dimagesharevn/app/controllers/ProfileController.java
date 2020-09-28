@@ -54,7 +54,7 @@ public class ProfileController {
 
     @ApiOperation(value = "Profile api", notes = "Update Profile", response = ProfileResponse.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = APIMessage.UPDATE_PROFILE_SUCCESSFUL),
+            @ApiResponse(code = 200, message = APIMessage.UPDATE_PROFILE_SUCCESSFUL),
             @ApiResponse(code = 400, message = APIMessage.UPDATE_PROFILE_FAILURE),
     })
 
