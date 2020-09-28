@@ -30,4 +30,10 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Modifying
     @Query("UPDATE User SET bcryptedPassword=:bcryptedPassword, token=null, tokenCreateDate =null WHERE token=:token")
     void updateUserForgotInfo(String bcryptedPassword, String token);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User SET logoutTime=:logoutTime WHERE username=:username")
+    void updateUserLogoutTime(Long logoutTime, String username);
+
 }

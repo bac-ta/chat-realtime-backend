@@ -10,9 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "ofUser")
@@ -55,6 +53,9 @@ public class User {
     @Column(columnDefinition = "TIMESTAMP")
     @ApiModelProperty(notes = "Date create token")
     private LocalDateTime tokenCreateDate;
+    @Column(columnDefinition = "Logout time")
+    @ApiModelProperty(notes = "Time when user logout")
+    private Long logoutTime;
     @Column
     @ApiModelProperty(notes = "Bcrypted password")
     private String bcryptedPassword;

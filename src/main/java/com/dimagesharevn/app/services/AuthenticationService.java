@@ -8,10 +8,13 @@ import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
+import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.LoginRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.repositories.JWTRepository;
+import com.dimagesharevn.app.repositories.MessageArchiveRepository;
+import com.dimagesharevn.app.repositories.UserRepository;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -34,6 +37,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +51,20 @@ public class AuthenticationService {
     private JwtTokenProviderFactory jwtFactory;
     private JWTRepository jwtRepository;
     private AuthenticationManager authManager;
-
+    private UserRepository userRepository;
+    private MessageArchiveRepository messageArchive;
     private OpenfireComponentFactory oFFactory;
 
     @Autowired
     public AuthenticationService(@Qualifier("jwtTokenProvider") JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager,
-                                 JWTRepository jwtRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory) {
+                                 JWTRepository jwtRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory,
+                                 UserRepository userRepository,MessageArchiveRepository messageArchive) {
         this.jwtFactory = jwtFactory;
         this.authManager = authManager;
         this.jwtRepository = jwtRepository;
         this.oFFactory = oFFactory;
+        this.userRepository = userRepository;
+        this.messageArchive = messageArchive;
     }
 
     public LoginResponse login(LoginRequest req) {
@@ -120,6 +130,15 @@ public class AuthenticationService {
         //Delete session
         String username = jwtFactory.getUsernameFromJWT(jwt);
         RestTemplate template = new RestTemplate();
+
+        //get and update logout time
+//        long localTime = System.currentTimeMillis();
+//        System.out.println(convertTime(localTime));
+//        userRepository.updateUserLogoutTime(localTime, username);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        User user = optionalUser.get();
+
+        messageArchive.findFromJIDCountMessage(1601262410851L,1601263892600L);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -145,4 +164,9 @@ public class AuthenticationService {
         return (AccountPrincipal) authentication.getPrincipal();
     }
 
+    private String convertTime(long time){
+        Date date = new Date(time);
+        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return format.format(date);
+    }
 }
