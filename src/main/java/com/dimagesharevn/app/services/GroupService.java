@@ -2,7 +2,6 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.entities.Group;
 import com.dimagesharevn.app.models.rests.request.GroupSaveRequest;
@@ -23,9 +22,9 @@ import java.util.List;
 
 @Service
 public class GroupService {
-    private GroupRepository groupRepository;
-    private OpenfireComponentFactory oFFactory;
-    private AppComponentFactory appFactory;
+    private final GroupRepository groupRepository;
+    private final OpenfireComponentFactory oFFactory;
+    private final AppComponentFactory appFactory;
 
     @Autowired
     public GroupService(GroupRepository groupRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory,
@@ -47,7 +46,7 @@ public class GroupService {
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<GroupSaveRequest> requestBody = new HttpEntity<>(request, headers);
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/groups", requestBody, GroupSaveRequest.class);
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/groups", requestBody, GroupSaveRequest.class);
 
         return new GroupResponse(request.getName(), APIMessage.CREATE_GROUP_SUCCESSFUL);
     }
@@ -58,7 +57,7 @@ public class GroupService {
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<GroupSaveRequest> requestBody = new HttpEntity<>(request, headers);
-        template.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/groups/" + groupName, HttpMethod.PUT, requestBody, GroupSaveRequest.class);
+        template.exchange(oFFactory.getOpenfireRestApiEndPointBase() + "/groups/" + groupName, HttpMethod.PUT, requestBody, GroupSaveRequest.class);
 
         return new GroupResponse(request.getName(), APIMessage.UPDATE_GROUP_SUCCESSFUL);
     }
