@@ -125,7 +125,7 @@ public class UserController {
         String response = userService.forgotPassword(userOptional);
         User user = userOptional.get();
 
-        String longUrl = "http://localhost:8080/api/user/reset-password?token=" + user.getToken();
+        String longUrl = "http://207.148.119.90:1234/api/user/reset-password?token=" + user.getToken();
         ShortenURL url = new ShortenURL();
         url.setFullUrl(longUrl);
         String randomChar = getRandomChars();
@@ -142,7 +142,7 @@ public class UserController {
 
 
         if (!response.startsWith("Invalid")) {
-            response = "http://localhost:8080/api/user/reset-password?token=" + response;
+            response = "http://207.148.119.90:1234/api/user/reset-password?token=" + response;
         }
         return new ResponseEntity<>(response, OK);
     }
@@ -151,9 +151,9 @@ public class UserController {
     public void showChangePasswordPage(HttpServletResponse response, @RequestParam String token) throws IOException {
         String result = userService.validateToken(token);
         if (result != null) {
-            response.sendRedirect("http://localhost:4200/404");
+            response.sendRedirect("http://207.148.119.90:5678/404");
         } else {
-            response.sendRedirect("http://localhost:4200/pre-auth/new-password?token=" + token);
+            response.sendRedirect("http://207.148.119.90:5678/pre-auth/new-password?token=" + token);
         }
     }
 
@@ -165,7 +165,7 @@ public class UserController {
 
 
     private void setShortUrl(String randomChar, ShortenURL shortenUrl) {
-        shortenUrl.setShortUrl("http://localhost:8080/api/user/s/" + randomChar);
+        shortenUrl.setShortUrl("http://207.148.119.90:1234/api/user/s/" + randomChar);
         shortenUrlList.put(randomChar, shortenUrl);
     }
 
