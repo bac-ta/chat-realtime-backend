@@ -13,4 +13,6 @@ public interface AppComponentFactory {
     String getFileStoreAvatar();
 
     String getFileStoreData();
+
+    Integer getPort();
 }
