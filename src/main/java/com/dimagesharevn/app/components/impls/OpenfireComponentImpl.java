@@ -53,7 +53,7 @@ public class OpenfireComponentImpl implements OpenfireComponentFactory {
     @Override
     public String getOpenfireRestApiEndPointBase() {
         StringBuilder builder = new StringBuilder();
-        builder.append("http://").append(host).append(":").append(port).append("/plugins/restapi/v1");
+        builder.append("http://").append(getHost()).append(":").append(getPort()).append("/plugins/restapi/v1");
         return builder.toString();
     }
 }
