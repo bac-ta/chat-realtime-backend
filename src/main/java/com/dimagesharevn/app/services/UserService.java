@@ -1,5 +1,7 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.components.AppComponentFactory;
+import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
@@ -13,10 +15,9 @@ import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.models.rests.response.UserFindingResponse;
 import com.dimagesharevn.app.models.rests.response.UserRegistResponse;
 import com.dimagesharevn.app.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -30,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.MalformedURLException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,32 +40,33 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 @Transactional
 public class UserService {
     private static final long EXPIRE_TOKEN_AFTER_MINUTES = 30;
-
-    @Value("${openfire.secret-key}")
-    private String openfireSecretKey;
-    @Value("${app.query.record-limit}")
-    private Integer recordLimit;
-
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationService authenticationService;
+    private OpenfireComponentFactory oFFactory;
+    private AppComponentFactory appFactory;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationService authenticationService) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+                       AuthenticationService authenticationService, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory,
+                       @Qualifier("appComponentFactoryImpl") AppComponentFactory appFactory) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationService = authenticationService;
+        this.oFFactory = oFFactory;
+        this.appFactory = appFactory;
     }
 
     public UserRegistResponse createUser(UserRegistRequest request) throws HttpClientErrorException {
         RestTemplate template = new RestTemplate();
-
+        String email = request.getEmail();
+        if (userRepository.findByEmail(email) != null)
+            return new UserRegistResponse(null, APIMessage.REGIST_USER_FAIL_EMAIL);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserRegistRequest> requestBody = new HttpEntity<>(request, headers);
         template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users", requestBody, UserRegistRequest.class);
@@ -74,7 +75,7 @@ public class UserService {
     }
 
     public List<UserFindingResponse> findUser(String searchText, int start) {
-        Pageable pageable = PageRequest.of(start, recordLimit);
+        Pageable pageable = PageRequest.of(start, appFactory.getRecordLimit());
         List<User> userList = userRepository.findByUsernameContainingIgnoreCaseOrNameContainingIgnoreCaseOrEmailContainingIgnoreCase(searchText, searchText, searchText, pageable);
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String currentUsername = principal.getUsername();
@@ -85,7 +86,7 @@ public class UserService {
         //Check session exist, if ok, don't need connect, else must connect
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
@@ -104,7 +105,7 @@ public class UserService {
     public void addFriend(RosterRequest request) {
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RosterRequest> requestBody = new HttpEntity<>(request, headers);
 
@@ -117,7 +118,7 @@ public class UserService {
     public RosterDTO getFriends() {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -130,11 +131,8 @@ public class UserService {
     }
 
 
+    public String forgotPassword(Optional<User> userOptional) {
 
-    public String forgotPassword(String email) throws MalformedURLException {
-
-        Optional<User> userOptional = Optional
-                .ofNullable(userRepository.findByEmail(email));
 
         if (!userOptional.isPresent()) {
             return "Invalid email id.";
@@ -166,16 +164,9 @@ public class UserService {
 
         User user = userOptional.get();
 
-        userRepository.saveBcryptedPassword(user.getUsername(), passwordEncoder.encode(password));
-        user.setToken(null);
-        user.setTokenCreateDate(null);
-
-        userRepository.save(user);
-
-        //update encrypted password
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         PasswordResetRequest resetRequest = new PasswordResetRequest(password);
@@ -183,10 +174,12 @@ public class UserService {
         restTemplate.exchange(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + user.getUsername(),
                 HttpMethod.PUT, entity, PasswordResetRequest.class);
 
+        userRepository.updateUserForgotInfo(passwordEncoder.encode(password), token);
+
         return "Your password successfully updated.";
     }
 
-    public String validateToken(String token){
+    public String validateToken(String token) {
         Optional<User> userOptional = Optional
                 .ofNullable(userRepository.findByToken(token));
         if (!userOptional.isPresent()) {
@@ -200,6 +193,7 @@ public class UserService {
         }
         return null;
     }
+
     private String generateToken() {
         StringBuilder token = new StringBuilder();
 

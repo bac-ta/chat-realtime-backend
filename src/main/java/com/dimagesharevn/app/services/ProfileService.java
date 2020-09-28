@@ -37,4 +37,10 @@ public class ProfileService {
             return new ProfileResponse(APIMessage.UPDATE_PROFILE_FAILURE);
         }
     }
+
+    public Optional<Profile> findByUsername(){
+        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+        return profileRepository.findById(principal.getUsername());
+    }
+
 }
