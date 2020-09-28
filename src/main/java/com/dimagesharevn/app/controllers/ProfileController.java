@@ -92,7 +92,7 @@ public class ProfileController {
             @ApiResponse(code = 400, message = APIMessage.UPDATE_PROFILE_FAILURE),
     })
     @GetMapping("/get-profile")
-    public ResponseEntity<Optional<Profile>> findOnlineUser() {
+    public ResponseEntity<Optional<Profile>> findProfile() {
         return new ResponseEntity<>(profileService.findByUsername(), HttpStatus.OK);
     }
 
