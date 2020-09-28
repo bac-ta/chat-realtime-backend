@@ -23,7 +23,7 @@ spring:
 
   redis:
     port: 6379
-    host: localhost
+    host: 207.148.119.90
 
   flyway:
     baseline-on-migrate: true
@@ -56,7 +56,7 @@ server:
 
 openfire:
   secret-key: F0Q8t0rOY8hhodIe
-  host: localhost
+  host: 207.148.119.90
   xmpp-client-connection-port: 5222
   xmpp-domain: dimagesharevn.develop
   xmpp-client-bin-port: 9090
