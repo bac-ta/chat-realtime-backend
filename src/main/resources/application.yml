@@ -33,6 +33,7 @@ spring:
     locations: classpath:db/migration
     user: root
     password: Silencer&&55
+    url: jdbc:mysql://localhost:3306/chat-realtime-db?useUnicode=true&characterEncoding=UTF-8&useSSL=false
 
   mail:
     host: smtp.gmail.com
