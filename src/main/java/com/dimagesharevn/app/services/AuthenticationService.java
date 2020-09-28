@@ -97,10 +97,6 @@ public class AuthenticationService {
                     return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
             }
         }
-        System.out.println(oFFactory.getXmppDomain());
-        System.out.println(oFFactory.getHost());
-        System.out.println(oFFactory.getXmppClientConnectionPort());
-
         //If sessions not exist, we login
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
@@ -114,7 +110,6 @@ public class AuthenticationService {
             AbstractXMPPConnection conn2 = new XMPPTCPConnection(config);
             conn2.connect().login();
         } catch (InterruptedException | XMPPException | SmackException | IOException e) {
-            e.printStackTrace();
             throw new AuthenticationCredentialsNotFoundException("");
         }
 
