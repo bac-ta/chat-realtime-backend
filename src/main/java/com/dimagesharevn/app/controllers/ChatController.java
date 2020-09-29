@@ -2,12 +2,14 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
-import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
+import com.dimagesharevn.app.models.rests.request.RosterRequest;
+import com.dimagesharevn.app.repositories.MessageArchiveRepository;
+import com.dimagesharevn.app.repositories.UserRepository;
+import com.dimagesharevn.app.services.AuthenticationService;
 import com.dimagesharevn.app.models.dtos.NumberMessageDTO;
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
-import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.repositories.MessageArchiveRepository;
 import com.dimagesharevn.app.repositories.UserRepository;
 import com.dimagesharevn.app.services.AuthenticationService;
@@ -22,7 +24,11 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +43,8 @@ public class ChatController {
     private final MessageArchiveRepository messageArchiveRepository;
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
-    public ChatController(ChatService chatService,MessageArchiveRepository messageArchiveRepository
+
+    public ChatController(ChatService chatService,,MessageArchiveRepository messageArchiveRepository
             ,AuthenticationService authenticationService,UserRepository userRepository) {
         this.chatService = chatService;
         this.messageArchiveRepository = messageArchiveRepository;
@@ -45,16 +52,6 @@ public class ChatController {
         this.userRepository = userRepository;
     }
 
-    @ApiOperation(value = "Create a chat room API", notes = "Create chat")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = APIMessage.CREATE_CHAT_ROOM_SUCCESSFUL),
-            @ApiResponse(code = 400, message = APIMessage.CREATE_CHAT_ROOM_FAILURE)
-    })
-    @PostMapping("/create")
-    public ResponseEntity<Void> createChatRoom(ChatRoomRequest request) {
-        chatService.createChatRoom(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
 
     @ApiOperation(value = "Add friend", notes = "Add friend API")
     @ApiResponses(value = {

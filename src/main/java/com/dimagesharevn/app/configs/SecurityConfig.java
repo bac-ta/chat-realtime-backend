@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/auth/login", "/user/create", "/user/forgot-password", "/user/reset-password", "/user/s/**").permitAll()
                 .antMatchers("/user/search", "/auth/logout", "/user/online", "/search", "/user/addFriend/**", "/user/getFriends",
-                        "/room/getRooms", "/room/addUser/**").hasAuthority(UserType.MEMBER.name())
+                        "/room/getRooms", "/room/addUser/**", "room/create", "/chat/loadHistory").hasAuthority(UserType.MEMBER.name())
                 .anyRequest()
                 .authenticated();
         // Add our custom JWT security filter

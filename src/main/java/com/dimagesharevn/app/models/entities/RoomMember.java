@@ -8,17 +8,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "ofMucRoom")
+@Table(name = "ofMucMember")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class RoomMember implements Serializable {
     @Id
     private Long roomID;
     @Column(length = 50)
-    private String name;
-    private String naturalName;
-    private String description;
+    private String jid;
 }
