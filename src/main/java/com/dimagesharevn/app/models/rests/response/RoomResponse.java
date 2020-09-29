@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoomResponse {
+    private Long roomID;
     private String name;
     private String naturalName;
-    private String description;
 }
