@@ -16,6 +16,8 @@ public class AppComponentFactoryImpl implements AppComponentFactory {
     private String fileStoreAvatar;
     @Value("${app.file-store.data}")
     private String fileStoreData;
+    @Value("${server.port}")
+    private Integer port;
 
     @Override
     public String getTokenSecret() {
@@ -40,5 +42,10 @@ public class AppComponentFactoryImpl implements AppComponentFactory {
     @Override
     public String getFileStoreData() {
         return fileStoreData;
+    }
+
+    @Override
+    public Integer getPort() {
+        return port;
     }
 }

@@ -2,7 +2,6 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
 import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.entities.MessageArchive;
@@ -22,10 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
-    private MessageArchiveRepository loadHistoryRepository;
-    private AuthenticationService authenticationService;
+    private final MessageArchiveRepository loadHistoryRepository;
+    private final AuthenticationService authenticationService;
 
-    private OpenfireComponentFactory oFFactory;
+    private final OpenfireComponentFactory oFFactory;
 
     @Autowired
     public ChatService(AuthenticationService authenticationService, MessageArchiveRepository loadHistoryRepository,
@@ -49,7 +48,7 @@ public class ChatService {
         dto.setMembers(request.getMembers());
         HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(dto, headers);
 
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/chatrooms", requestBody, ChatRoomDTO.class);
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms", requestBody, ChatRoomDTO.class);
     }
 
     public void addFriend(RosterRequest request) {
@@ -61,7 +60,7 @@ public class ChatService {
 
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
 
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/users/" + principal.getUsername() + "/roster",
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/users/" + principal.getUsername() + "/roster",
                 requestBody, Object.class);
     }
 

@@ -3,7 +3,6 @@ package com.dimagesharevn.app.services;
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
@@ -42,11 +41,11 @@ import java.util.Optional;
 
 @Service
 public class AuthenticationService {
-    private JwtTokenProviderFactory jwtFactory;
-    private JWTRepository jwtRepository;
-    private AuthenticationManager authManager;
+    private final JwtTokenProviderFactory jwtFactory;
+    private final JWTRepository jwtRepository;
+    private final AuthenticationManager authManager;
 
-    private OpenfireComponentFactory oFFactory;
+    private final OpenfireComponentFactory oFFactory;
 
     @Autowired
     public AuthenticationService(@Qualifier("jwtTokenProvider") JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager,
@@ -79,7 +78,7 @@ public class AuthenticationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        String uri = APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/sessions/{username}";
+        String uri = oFFactory.getOpenfireRestApiEndPointBase() + "/sessions/{username}";
 
 
         Map<String, String> uriParam = new HashMap<>();
@@ -125,7 +124,7 @@ public class AuthenticationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        String uri = APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/sessions/{username}";
+        String uri = oFFactory.getOpenfireRestApiEndPointBase() + "/sessions/{username}";
 
         Map<String, String> uriParam = new HashMap<>();
         uriParam.put("username", username);
