@@ -16,6 +16,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class Room {
     @Id
+    private Long roomID;
     @Column(length = 50)
     private String name;
     private String naturalName;
