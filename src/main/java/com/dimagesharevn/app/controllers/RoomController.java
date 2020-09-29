@@ -61,6 +61,7 @@ public class RoomController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+
     @ApiOperation(value = "Create chat room API", notes = "Create chat room api that can add user to room")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = ""),
@@ -70,5 +71,16 @@ public class RoomController {
     public ResponseEntity<Void> createChatRoom(@Valid @RequestBody ChatRoomRequest request) {
         roomService.createChatRoom(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+
+    @ApiOperation(value = "Fetch rooms joined API", notes = "Fetch rooms joined of user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = ""),
+            @ApiResponse(code = 400, message = "")
+    })
+    @GetMapping("/joined")
+    public ResponseEntity<List<RoomResponse>> fetchRoomJoined() {
+        return new ResponseEntity<>(roomService.fetchRoomList(), HttpStatus.OK);
     }
 }

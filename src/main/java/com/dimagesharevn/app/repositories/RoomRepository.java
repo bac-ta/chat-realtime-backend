@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, String> {
     List<Room> findByNameContainingIgnoreCaseOrNaturalNameContainingIgnoreCase(String searchText, String searchText2, Pageable pageable);
+
+    List<Room> findByRoomIDIn(List<Long> roomIDS);
 }
