@@ -3,6 +3,7 @@ package com.dimagesharevn.app.models.dtos;
 import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
@@ -11,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class ChatRoomDTO extends ChatRoomRequest {
     private boolean persistent = true;
     private boolean publicRoom = true;
+    private String roomName;
 }

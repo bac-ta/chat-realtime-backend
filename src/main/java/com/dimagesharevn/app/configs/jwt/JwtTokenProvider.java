@@ -1,5 +1,6 @@
 package com.dimagesharevn.app.configs.jwt;
 
+import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.constants.ExceptionMessage;
 import io.jsonwebtoken.Claims;
@@ -11,7 +12,8 @@ import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -22,20 +24,19 @@ import java.util.Map;
 /**
  * @author bac-ta
  */
-@Component
+@Component("jwtTokenProvider")
 public class JwtTokenProvider implements JwtTokenProviderFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
-    @Value("${app.auth.token-secret}")
-    private String clientSecrectKey;
-    @Value("${app.auth.token-expiration-msec}")
-    private int expirationInMs;
+    @Qualifier("appComponentFactoryImpl")
+    @Autowired
+    private AppComponentFactory appFactory;
 
     @Override
     public String generateToken(Authentication authentication) {
         AccountPrincipal principal = (AccountPrincipal) authentication.getPrincipal();
         Date dateNow = new Date();
-        Date expiryDate = new Date(dateNow.getTime() + expirationInMs);
+        Date expiryDate = new Date(dateNow.getTime() + appFactory.getTokenExpirationMsec());
 
         Map<String, Object> claimMap = new HashMap<>();
         claimMap.put("username", principal.getUsername());
@@ -44,19 +45,19 @@ public class JwtTokenProvider implements JwtTokenProviderFactory {
         claimMap.put("name", principal.getName());
 
         return Jwts.builder().setClaims(claimMap).setIssuedAt(dateNow).
-                setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, clientSecrectKey).compact();
+                setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, appFactory.getTokenSecret()).compact();
     }
 
     @Override
     public String getUsernameFromJWT(String token) {
-        Claims claims = Jwts.parser().setSigningKey(clientSecrectKey).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser().setSigningKey(appFactory.getTokenSecret()).parseClaimsJws(token).getBody();
         return claims.get("username").toString();
     }
 
     @Override
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(clientSecrectKey).parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(appFactory.getTokenSecret()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             logger.error(ExceptionMessage.INVALID_JWT_SIGNATURE);

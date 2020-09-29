@@ -1,12 +1,14 @@
 package com.dimagesharevn.app.services;
 
-import com.dimagesharevn.app.constants.APIEndpointBase;
+import com.dimagesharevn.app.components.AppComponentFactory;
+import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.entities.Room;
+import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import com.dimagesharevn.app.models.rests.response.RoomResponse;
 import com.dimagesharevn.app.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -16,23 +18,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
-    private RoomRepository roomRepository;
-    @Value("${app.query.record-limit}")
-    private Integer recordLimit;
-    @Value("${openfire.secret-key}")
-    private String openfireSecretKey;
+    private final RoomRepository roomRepository;
+    private final AppComponentFactory appFactory;
+    private final OpenfireComponentFactory oFFactory;
+
 
     @Autowired
-    public RoomService(RoomRepository roomRepository) {
+    public RoomService(RoomRepository roomRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory,
+                       @Qualifier("appComponentFactoryImpl") AppComponentFactory appFactory) {
         this.roomRepository = roomRepository;
+        this.oFFactory = oFFactory;
+        this.appFactory = appFactory;
     }
 
     public List<RoomResponse> findRooms(String searchText, int start) {
-        Pageable pageable = PageRequest.of(start, recordLimit);
+        Pageable pageable = PageRequest.of(start, appFactory.getRecordLimit());
         List<Room> roomList = roomRepository.findByNameContainingIgnoreCaseOrNaturalNameContainingIgnoreCase(searchText, searchText, pageable);
         return roomList.stream().map(room -> new RoomResponse(room.getName(), room.getNaturalName(), room.getDescription()))
                 .collect(Collectors.toList());
@@ -41,11 +46,30 @@ public class RoomService {
     public void addUserWithRoleToChatRoom(String roomname, String userRole, String username) {
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(headers);
 
-        template.postForObject(APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/chatrooms/" + roomname + "/" + userRole + "/" + username,
+        String userJid = username + "@" + oFFactory.getXmppDomain();
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + userJid,
                 requestBody, Object.class);
+    }
+
+    public void createChatRoom(ChatRoomRequest request) {
+
+        UUID roomName = UUID.randomUUID();
+
+        ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+        chatRoomDTO.setRoomName(roomName.toString());
+        chatRoomDTO.setMembers(request.getMembers());
+        chatRoomDTO.setNaturalName(request.getNaturalName());
+
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", oFFactory.getSecretKey());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(chatRoomDTO, headers);
+
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms", requestBody, ChatRoomDTO.class);
     }
 }
