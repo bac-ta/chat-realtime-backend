@@ -10,6 +10,10 @@ import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.repositories.MessageArchiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -18,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.dimagesharevn.app.models.specification.MessageSpecification.*;
 
 @Service
 public class ChatService {
@@ -65,15 +71,16 @@ public class ChatService {
     }
 
     public List<HistoryDTO> loadHistory(String toJID, Long sentDate) {
+        Pageable limit = PageRequest.of(0, 10);
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
         String fromJID = userName + "@" + domainName;
-        List<MessageArchive> messageArchives;
-        if (sentDate == null)
-            messageArchives = loadHistoryRepository.loadHistoryFirst(fromJID, toJID);
-        else
-            messageArchives = loadHistoryRepository.loadHistoryNext(fromJID, toJID, sentDate);
+        Specification conditions = Specification.where(hasFromJID(fromJID))
+                .and(hasToJID(toJID));
+        Specification conditionsSentDate = Specification.where(hasFromJID(fromJID))
+                .and(hasToJID(toJID))
+                .and(hasSentDate(sentDate));
+        Page<MessageArchive> messageArchives = loadHistoryRepository.findAll(sentDate == null ? conditions : conditionsSentDate, limit);
         return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getMessageID(), messageArchive.getConversationID(), messageArchive.getSentDate(), messageArchive.getBody())).collect(Collectors.toList());
     }
-
 }
