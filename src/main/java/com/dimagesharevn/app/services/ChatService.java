@@ -74,15 +74,15 @@ public class ChatService {
                 requestBody, Object.class);
     }
 
-    public List<HistoryDTO> loadHistory(String toJID, Long sentDate) {
+    public List<HistoryDTO> loadHistory(String userNameTo, Long sentDate) {
         Pageable limit = PageRequest.of(0, 10);
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
         String fromJID = userName + "@" + oFFactory.getXmppDomain();
         Specification conditions = Specification.where(hasFromJID(fromJID))
-                .and(hasToJID(toJID));
+                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()));
         Specification conditionsSentDate = Specification.where(hasFromJID(fromJID))
-                .and(hasToJID(toJID))
+                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()))
                 .and(hasSentDate(sentDate));
         Page<MessageArchive> messageArchives = loadHistoryRepository.findAll(sentDate == null ? conditions : conditionsSentDate, limit);
         return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getMessageID(), messageArchive.getConversationID(), messageArchive.getSentDate(), messageArchive.getBody())).collect(Collectors.toList());
