@@ -1,21 +1,20 @@
 package com.dimagesharevn.app.models.rests.request;
 
-import com.dimagesharevn.app.models.dtos.MemberDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@MappedSuperclass
 public class ChatRoomRequest {
     @NotBlank
-    private String roomName;
-    @NotBlank
     private String naturalName;
-    private String description;
-    private List<MemberDTO> members;
+    private Set<String> members;
+
 }

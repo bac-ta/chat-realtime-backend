@@ -4,6 +4,7 @@ import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.entities.Room;
+import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import com.dimagesharevn.app.models.rests.response.RoomResponse;
 import com.dimagesharevn.app.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +50,26 @@ public class RoomService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(headers);
 
-        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + username,
+        String userJid = username + "@" + oFFactory.getXmppDomain();
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + userJid,
                 requestBody, Object.class);
+    }
+
+    public void createChatRoom(ChatRoomRequest request) {
+
+        UUID roomName = UUID.randomUUID();
+
+        ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
+        chatRoomDTO.setRoomName(roomName.toString());
+        chatRoomDTO.setMembers(request.getMembers());
+        chatRoomDTO.setNaturalName(request.getNaturalName());
+
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", oFFactory.getSecretKey());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(chatRoomDTO, headers);
+
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms", requestBody, ChatRoomDTO.class);
     }
 }
