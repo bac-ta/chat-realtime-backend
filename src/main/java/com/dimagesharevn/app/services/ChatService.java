@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,10 +42,11 @@ public class ChatService {
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        String roomName = UUID.randomUUID().toString();
+
         ChatRoomDTO dto = new ChatRoomDTO();
-        dto.setRoomName(request.getRoomName());
+        dto.setRoomName(roomName);
         dto.setNaturalName(request.getNaturalName());
-        dto.setDescription(request.getDescription());
         dto.setMembers(request.getMembers());
         HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(dto, headers);
 
