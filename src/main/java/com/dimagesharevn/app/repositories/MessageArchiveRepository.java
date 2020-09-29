@@ -17,7 +17,7 @@ public interface MessageArchiveRepository extends JpaRepository<MessageArchive, 
 
     @Query(
             "SELECT " +
-            "   m.fromJID , COUNT(m.fromJID) " +
+            "   new com.dimagesharevn.app.models.dtos.NumberMessageDTO(m.fromJID, COUNT(m.fromJID)) " +
             "FROM " +
             "    MessageArchive m " +
             "WHERE "+
