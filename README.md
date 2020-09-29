@@ -67,3 +67,10 @@ Stop all:
 $ docker-compose stop
 
 ```
+
+##Install 2 plugin REST API + MONITORING SERVICE 
+##Config openfire 
+* Opentab "Server -> Server Manager -> System Properties" and config:
+```bash
+route.all-resources = true
+```

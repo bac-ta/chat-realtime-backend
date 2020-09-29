@@ -1,8 +1,8 @@
 package com.dimagesharevn.app.services;
 
+import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.factory.JwtTokenProviderFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
-import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
@@ -18,7 +18,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,27 +36,24 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class AuthenticationService {
-    private JwtTokenProviderFactory jwtFactory;
-    private JWTRepository jwtRepository;
-    private AuthenticationManager authManager;
-    @Value("${openfire.xmpp-domain}")
-    private String xmppDomain;
-    @Value("${openfire.xmpp-client-connection-port}")
-    private int port;
-    @Value("${openfire.host}")
-    private String host;
-    @Value("${openfire.secret-key}")
-    private String openfireSecretKey;
+    private final JwtTokenProviderFactory jwtFactory;
+    private final JWTRepository jwtRepository;
+    private final AuthenticationManager authManager;
+
+    private final OpenfireComponentFactory oFFactory;
 
     @Autowired
-    public AuthenticationService(JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager, JWTRepository jwtRepository) {
+    public AuthenticationService(@Qualifier("jwtTokenProvider") JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager,
+                                 JWTRepository jwtRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory) {
         this.jwtFactory = jwtFactory;
         this.authManager = authManager;
         this.jwtRepository = jwtRepository;
+        this.oFFactory = oFFactory;
     }
 
     public LoginResponse login(LoginRequest req) {
@@ -77,11 +74,11 @@ public class AuthenticationService {
         //Check session exist, if ok, don't need connect, else must connect
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        String uri = APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/sessions/{username}";
+        String uri = oFFactory.getOpenfireRestApiEndPointBase() + "/sessions/{username}";
 
 
         Map<String, String> uriParam = new HashMap<>();
@@ -91,7 +88,7 @@ public class AuthenticationService {
                 SessionsResponse.class, uriParam);
 
         SessionsResponse sessionsResponse = responses.getBody();
-        List<SessionDTO> dtoList = sessionsResponse.getSessions();
+        List<SessionDTO> dtoList = Objects.requireNonNull(sessionsResponse).getSessions();
         if (dtoList.size() > 0) {
 
             for (SessionDTO sessionDTO : dtoList) {
@@ -103,9 +100,9 @@ public class AuthenticationService {
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                     .setUsernameAndPassword(username, password)
-                    .setXmppDomain(xmppDomain)
-                    .setHost(host)
-                    .setPort(port)
+                    .setXmppDomain(oFFactory.getXmppDomain())
+                    .setHost(oFFactory.getHost())
+                    .setPort(oFFactory.getXmppClientConnectionPort())
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                     .build();
 
@@ -123,11 +120,11 @@ public class AuthenticationService {
         String username = jwtFactory.getUsernameFromJWT(jwt);
         RestTemplate template = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", openfireSecretKey);
+        headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
 
-        String uri = APIEndpointBase.OPENFIRE_REST_API_ENDPOINT_BASE + "/sessions/{username}";
+        String uri = oFFactory.getOpenfireRestApiEndPointBase() + "/sessions/{username}";
 
         Map<String, String> uriParam = new HashMap<>();
         uriParam.put("username", username);
