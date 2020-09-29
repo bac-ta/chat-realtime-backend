@@ -2,6 +2,7 @@ package com.dimagesharevn.app.services;
 
 import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
+import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
 import com.dimagesharevn.app.models.dtos.ChatRoomDTO;
 import com.dimagesharevn.app.models.entities.MessageArchive;
@@ -9,6 +10,11 @@ import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
 import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.repositories.MessageArchiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +25,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.dimagesharevn.app.models.specification.MessageSpecification.*;
 
 @Service
 public class ChatService {
@@ -66,13 +74,18 @@ public class ChatService {
                 requestBody, Object.class);
     }
 
-    public List<HistoryDTO> loadHistory(String toJID, Long sentDate) {
+    public List<HistoryDTO> loadHistory(String userNameTo, Long sentDate) {
+        Pageable limit = PageRequest.of(0, 10);
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
         String fromJID = userName + "@" + oFFactory.getXmppDomain();
-        List<MessageArchive> messageArchives = loadHistoryRepository.loadHistory(fromJID, toJID, sentDate);
-
-        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getBody(), messageArchive.getSentDate())).collect(Collectors.toList());
+        Specification conditions = Specification.where(hasFromJID(fromJID))
+                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()));
+        Specification conditionsSentDate = Specification.where(hasFromJID(fromJID))
+                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()))
+                .and(hasSentDate(sentDate));
+        Page<MessageArchive> messageArchives = loadHistoryRepository.findAll(sentDate == null ? conditions : conditionsSentDate, limit);
+        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getMessageID(), messageArchive.getConversationID(), messageArchive.getSentDate(), messageArchive.getBody())).collect(Collectors.toList());
     }
 
 }
