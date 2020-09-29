@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class AvatarStorageProperties {
-    @Value("${app.file-store.avatar")
+    @Value("${app.file-store.avatar}")
     private String avatar_name;
 }

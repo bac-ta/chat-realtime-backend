@@ -5,6 +5,7 @@ import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.FileType;
 import com.dimagesharevn.app.models.property.AvatarStorageProperties;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -22,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Service
 public class FileService {
@@ -57,6 +60,16 @@ public class FileService {
             String fileNameGen = uuid.toString().concat(".").concat(fileTypeStr);
 
             // Copy file to the target location (Replacing existing file with the same name)
+            //sau xu ly lai cho nay
+            File dir = new File(String.valueOf(fileStorageLocation));
+            File[] Filess = dir.listFiles();
+            if(Filess != null){
+                IntStream.range(0, Filess.length).forEach(j -> {
+                    Filess[j].getAbsolutePath();
+                    Filess[j].delete();
+                });
+            }
+            //xu lys lai sau
             Path targetLocation = fileStorageLocation.resolve(fileNameGen);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 

@@ -64,28 +64,6 @@ public class ProfileController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
-    @ApiOperation(value = "Profile api", notes = "Update avatar")
-    @PostMapping("/update-avatar")
-    public FileResponse updateAvatar(@RequestParam("file") MultipartFile file) {
-        String fileName = fileService.storeFile(file);
-
-        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
-        Optional<Profile> profileOptional = profileRepository.findById(principal.getUsername());
-        if(profileOptional.isPresent()){
-            Profile profile = profileOptional.get();
-            profile.setAvatar(fileName);
-            profileRepository.save(profile);
-        }
-
-        String fileUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(APIEndpointBase.FILE_ENDPOINT_BASE + "/view-file/")
-                .path(fileName)
-                .toUriString();
-
-        return new FileResponse(fileName, fileUri, file.getContentType(), file.getSize());
-    }
-
     @ApiOperation(value = "Profile api", notes = "Find profile")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = APIMessage.UPDATE_PROFILE_SUCCESSFUL),
@@ -96,4 +74,24 @@ public class ProfileController {
         return new ResponseEntity<>(profileService.findByUsername(), HttpStatus.OK);
     }
 
+//    @ApiOperation(value = "Profile api", notes = "Update avatar")
+//    @PostMapping("/update-avatar")
+//    public FileResponse updateAvatar(@RequestParam("file") MultipartFile file) {
+//        String fileName = fileService.storeFile(file);
+//
+//        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
+//        Optional<Profile> profileOptional = profileRepository.findById(principal.getUsername());
+//        if(profileOptional.isPresent()){
+//            Profile profile = profileOptional.get();
+//            profile.setAvatar(fileName);
+//            profileRepository.save(profile);
+//        }
+//
+//        String fileUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path(APIEndpointBase.FILE_ENDPOINT_BASE + "/view-file/")
+//                .path(fileName)
+//                .toUriString();
+//
+//        return new FileResponse(fileName, fileUri, file.getContentType(), file.getSize());
+//    }
 }
