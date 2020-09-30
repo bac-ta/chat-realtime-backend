@@ -103,10 +103,10 @@ public class ChatService {
         User user = optionalUser.get();
         String toJID = username + "@" + oFFactory.getXmppDomain();
         long localTime = System.currentTimeMillis();
-        List<NumberMessageDTO> messageArchives = archiveRepository.findFromJIDCountMessage(user.getLogoutTime(),
-                localTime, toJID);
-//        List<NumberMessageDTO> messageArchives = archiveRepository.findFromJIDCountMessage(1601436374521L,
-//                1601436619516L, toJID);
+//        List<NumberMessageDTO> messageArchives = archiveRepository.findFromJIDCountMessage(user.getLogoutTime(),
+//                localTime, toJID);
+        List<NumberMessageDTO> messageArchives = archiveRepository.findFromJIDCountMessage(user.getLogoutTime(),toJID);
+
         for(NumberMessageDTO messageDTO: messageArchives){
             String[] list = messageDTO.getUsername().split("@");
             messageDTO.setUsername(list[0]);

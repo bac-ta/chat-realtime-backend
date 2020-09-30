@@ -36,9 +36,5 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("UPDATE User SET logoutTime=:logoutTime WHERE username=:username")
     void updateUserLogoutTime(Long logoutTime, String username);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE User SET loginTime=:loginTime WHERE username=:username")
-    void updateUserLoginTime(Long loginTime, String username);
 
 }

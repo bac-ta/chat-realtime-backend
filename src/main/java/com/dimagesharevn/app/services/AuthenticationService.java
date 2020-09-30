@@ -105,8 +105,6 @@ public class AuthenticationService {
                     return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
             }
         }
-//        long localTime = System.currentTimeMillis();
-//        userRepository.updateUserLoginTime(localTime, username);
         //If sessions not exist, we login
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
@@ -160,9 +158,4 @@ public class AuthenticationService {
         return (AccountPrincipal) authentication.getPrincipal();
     }
 
-    private String convertTime(long time){
-        Date date = new Date(time);
-        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(date);
-    }
 }
