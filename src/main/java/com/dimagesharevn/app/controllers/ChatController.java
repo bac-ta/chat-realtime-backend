@@ -1,22 +1,10 @@
 package com.dimagesharevn.app.controllers;
 
-import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
-import com.dimagesharevn.app.models.rests.request.RosterRequest;
-import com.dimagesharevn.app.repositories.MessageArchiveRepository;
-import com.dimagesharevn.app.repositories.UserRepository;
-import com.dimagesharevn.app.services.AuthenticationService;
 import com.dimagesharevn.app.models.dtos.NumberMessageDTO;
-import com.dimagesharevn.app.models.entities.User;
-import com.dimagesharevn.app.models.rests.request.ChatRoomRequest;
-import com.dimagesharevn.app.repositories.MessageArchiveRepository;
-import com.dimagesharevn.app.repositories.UserRepository;
-import com.dimagesharevn.app.services.AuthenticationService;
+import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.services.ChatService;
-import com.dimagesharevn.app.services.RoomService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,10 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(APIEndpointBase.CHAT_ENPOINT_BASE)
@@ -40,16 +28,9 @@ import java.util.Optional;
 )
 public class ChatController {
     private final ChatService chatService;
-    private final MessageArchiveRepository messageArchiveRepository;
-    private final AuthenticationService authenticationService;
-    private final UserRepository userRepository;
 
-    public ChatController(ChatService chatService,,MessageArchiveRepository messageArchiveRepository
-            ,AuthenticationService authenticationService,UserRepository userRepository) {
+    public ChatController(ChatService chatService) {
         this.chatService = chatService;
-        this.messageArchiveRepository = messageArchiveRepository;
-        this.authenticationService = authenticationService;
-        this.userRepository = userRepository;
     }
 
 
@@ -80,14 +61,9 @@ public class ChatController {
 
     @GetMapping(value = "/numOfMessOff")
     @ResponseBody
-    public List<NumberMessageDTO> getAllMess(){
-        AccountPrincipal principal = authenticationService.getCurrentPrincipal();
-        String username = principal.getUsername();
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        User user = optionalUser.get();
-
-        List<NumberMessageDTO> messageArchives= messageArchiveRepository.findFromJIDCountMessage(user.getLogoutTime(),user.getLoginTime());
-        return messageArchives;
+    public ResponseEntity<List<NumberMessageDTO>> loadOffMess() {
+        List<NumberMessageDTO> numberMessageDTOS = chatService.loadNumMessOff();
+        return new ResponseEntity<>(numberMessageDTOS, HttpStatus.OK);
 
     }
 

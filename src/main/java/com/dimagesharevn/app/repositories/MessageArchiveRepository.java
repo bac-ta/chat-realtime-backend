@@ -18,9 +18,13 @@ public interface MessageArchiveRepository extends JpaRepository<MessageArchive, 
                     "FROM " +
                     "    MessageArchive m " +
                     "WHERE "+
+                    "m.toJID = :toJID" +
+                    " AND " +
                     "  m.sentDate "+
                     "BETWEEN :logoutTime AND :latestLogin "+
                     "GROUP BY " +
                     "    m.fromJID")
-    List<NumberMessageDTO> findFromJIDCountMessage(@Param("logoutTime")Long logoutTime, @Param("latestLogin")Long latestLogin);
+    List<NumberMessageDTO> findFromJIDCountMessage(@Param("logoutTime")Long logoutTime,
+                                                   @Param("latestLogin")Long latestLogin,
+                                                   @Param("toJID")String toJID);
 }
