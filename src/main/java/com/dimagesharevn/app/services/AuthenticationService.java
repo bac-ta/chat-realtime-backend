@@ -6,18 +6,13 @@ import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.SessionStatusType;
 import com.dimagesharevn.app.models.caches.JWT;
-import com.dimagesharevn.app.models.dtos.NumberMessageDTO;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
-import com.dimagesharevn.app.models.entities.MessageArchive;
-import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.LoginRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.repositories.JWTRepository;
 import com.dimagesharevn.app.repositories.MessageArchiveRepository;
 import com.dimagesharevn.app.repositories.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -110,8 +105,8 @@ public class AuthenticationService {
                     return new LoginResponse(APIMessage.LOGIN_SUCCESSFUL, jwt);
             }
         }
-        long localTime = System.currentTimeMillis();
-        userRepository.updateUserLoginTime(localTime, username);
+//        long localTime = System.currentTimeMillis();
+//        userRepository.updateUserLoginTime(localTime, username);
         //If sessions not exist, we login
         try {
             XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()

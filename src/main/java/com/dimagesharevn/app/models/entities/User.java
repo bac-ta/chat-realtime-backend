@@ -56,9 +56,6 @@ public class User {
     @Column(columnDefinition = "Logout time")
     @ApiModelProperty(notes = "Time when user logout")
     private Long logoutTime;
-    @Column(columnDefinition = "Login time")
-    @ApiModelProperty(notes = "Time when user login")
-    private Long loginTime;
     @Column
     @ApiModelProperty(notes = "Bcrypted password")
     private String bcryptedPassword;
