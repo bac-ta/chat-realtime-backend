@@ -73,6 +73,11 @@ public class RoomService {
 
         Set<String> members = request.getMembers().stream().map(member -> member + "@" + oFFactory.getXmppDomain())
                 .collect(Collectors.toSet());
+
+        AccountPrincipal accountPrincipal = authenticationService.getCurrentPrincipal();
+        String username = accountPrincipal.getUsername();
+        members.add(username + "@" + oFFactory.getXmppDomain());
+        
         chatRoomDTO.setMembers(members);
         chatRoomDTO.setNaturalName(request.getNaturalName());
 
