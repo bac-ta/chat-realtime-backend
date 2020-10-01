@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/login", "/user/create", "/user/forgot-password", "/user/reset-password", "/user/s/**").permitAll()
+                .antMatchers("/auth/login", "/user/create", "/user/forgot-password", "/user/reset-password", "/user/s/**","/file/view-file/**").permitAll()
                 .antMatchers("/user/search", "/auth/logout", "/user/online", "/search", "/user/addFriend/**", "/user/getFriends",
                         "/room/getRooms", "/room/addUser/**", "room/create", "/chat/loadHistory", "/chat/numOfMessOff").hasAuthority(UserType.MEMBER.name())
                 .anyRequest()
