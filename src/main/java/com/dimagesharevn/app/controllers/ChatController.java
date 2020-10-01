@@ -2,6 +2,7 @@ package com.dimagesharevn.app.controllers;
 
 import com.dimagesharevn.app.constants.APIEndpointBase;
 import com.dimagesharevn.app.models.dto.HistoryDTO;
+import com.dimagesharevn.app.models.dtos.NumberMessageDTO;
 import com.dimagesharevn.app.models.rests.request.RosterRequest;
 import com.dimagesharevn.app.services.ChatService;
 import io.lettuce.core.dynamic.annotation.Param;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -55,6 +57,14 @@ public class ChatController {
                                                      @Param("sentDate") Long sentDate) {
         List<HistoryDTO> historyDTOS = chatService.loadHistory(toJID, sentDate);
         return new ResponseEntity<>(historyDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/numOfMessOff")
+    @ResponseBody
+    public ResponseEntity<List<NumberMessageDTO>> loadOffMess() {
+        List<NumberMessageDTO> numberMessageDTOS = chatService.loadNumMessOff();
+        return new ResponseEntity<>(numberMessageDTOS, HttpStatus.OK);
+
     }
 
 }
