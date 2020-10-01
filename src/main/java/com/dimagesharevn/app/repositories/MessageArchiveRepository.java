@@ -14,27 +14,11 @@ import java.util.List;
 
 @Repository
 public interface MessageArchiveRepository extends JpaRepository<MessageArchive, String>, JpaSpecificationExecutor<MessageArchive> {
-    @Query(
-            "SELECT " +
-                    "   new com.dimagesharevn.app.models.dtos.NumberMessageDTO(m.fromJID, COUNT(m.fromJID)) " +
-                    "FROM " +
-                    "    MessageArchive m " +
-                    "WHERE "+
-                    "m.toJID = :toJID" +
-                    " AND " +
-                    "  m.sentDate "+
-                    "BETWEEN :logoutTime AND unix_timestamp()*1000 " +
-                    "GROUP BY " +
-                    "    m.fromJID")
-    List<NumberMessageDTO> findFromJIDCountMessage(@Param("logoutTime")Long logoutTime,
-//                                                   @Param("latestLogin")Long latestLogin,
-                                                   @Param("toJID")String toJID);
-
-//    @Modifying
-//    @Query(value ="select m.fromJID, COUNT(m.fromJID) from MessageArchive m " +
-//            "where m.toJID = :toJID AND m.sentDate between :logoutTime AND unix_timestamp(now()) group by m.fromJID"
-//            ,nativeQuery = true)
-//    List<NumberMessageDTO> findFromJIDCountMessage1(@Param("logoutTime")Long logoutTime,
-////                                                   @Param("latestLogin")Long latestLogin,
-//                                                    @Param("toJID")String toJID);
+    @Query("SELECT new com.dimagesharevn.app.models.dtos.NumberMessageDTO(m.fromJID, COUNT(m.fromJID)) " +
+            " FROM MessageArchive m WHERE m.toJID = :toJID AND " +
+            " m.sentDate BETWEEN :logoutTime AND :latestLogin " +
+            " GROUP BY m.fromJID")
+    List<NumberMessageDTO> findFromJIDCountMessage(@Param("logoutTime") Long logoutTime,
+                                                   @Param("latestLogin") Long latestLogin,
+                                                   @Param("toJID") String toJID);
 }
