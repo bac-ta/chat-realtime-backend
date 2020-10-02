@@ -79,7 +79,7 @@ public class RoomController {
             @ApiResponse(code = 201, message = ""),
             @ApiResponse(code = 400, message = "")
     })
-    @GetMapping("/joined")
+    @GetMapping("/joinedList")
     public ResponseEntity<List<RoomResponse>> fetchRoomJoined() {
         return new ResponseEntity<>(roomService.fetchRoomList(), HttpStatus.OK);
     }
