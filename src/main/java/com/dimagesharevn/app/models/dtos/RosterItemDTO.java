@@ -6,9 +6,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class RosterDTO {
-    private List<RosterItemDTO> rosterItem;
+public class RosterItemDTO {
+    private String jid;
+    private short subscriptionType;
+    private List<String> groups;
 }
