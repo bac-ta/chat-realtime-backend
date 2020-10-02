@@ -100,4 +100,19 @@ public class RoomService {
         return rooms.stream().map(room -> new RoomResponse(room.getRoomID(), room.getName(), room.getNaturalName())).collect(Collectors.toList());
     }
 
+    public void joinChatRoom(String roomname, String userRole) {
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", oFFactory.getSecretKey());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(headers);
+
+        AccountPrincipal accountPrincipal = authenticationService.getCurrentPrincipal();
+        String username = accountPrincipal.getUsername();
+
+        String userJid = username + "@" + oFFactory.getXmppDomain();
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + userJid,
+                requestBody, Object.class);
+    }
+
 }
