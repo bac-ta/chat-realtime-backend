@@ -5,6 +5,7 @@ import com.dimagesharevn.app.components.OpenfireComponentFactory;
 import com.dimagesharevn.app.configs.jwt.AccountPrincipal;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.models.dtos.RosterDTO;
+import com.dimagesharevn.app.models.dtos.RosterItemDTO;
 import com.dimagesharevn.app.models.dtos.SessionDTO;
 import com.dimagesharevn.app.models.entities.User;
 import com.dimagesharevn.app.models.rests.request.PasswordResetRequest;
@@ -124,8 +125,10 @@ public class UserService {
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         ResponseEntity<RosterDTO> responses = restTemplate.exchange(oFFactory.getOpenfireRestApiEndPointBase() + "/users/" + principal.getUsername() + "/roster",
                 HttpMethod.GET, entity, RosterDTO.class);
+        List<RosterItemDTO> rosterItems = responses.getBody().getRosterItem().stream()
+                .filter(rosterItem -> rosterItem.getSubscriptionType() != 0).collect(Collectors.toList());
 
-        return responses.getBody();
+        return new RosterDTO(rosterItems);
 
     }
 

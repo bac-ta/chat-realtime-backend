@@ -1,15 +1,16 @@
 package com.dimagesharevn.app.services;
 
 
+import com.dimagesharevn.app.components.AppComponentFactory;
 import com.dimagesharevn.app.constants.APIMessage;
 import com.dimagesharevn.app.enumerations.FileType;
-import com.dimagesharevn.app.models.property.AvatarStorageProperties;
 import com.dimagesharevn.app.utils.ResourceNotFoundExceptionHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,8 @@ public class FileService {
     private static final Logger logger = LoggerFactory.getLogger(FileService.class);
 
     @Autowired
-    public FileService(AvatarStorageProperties avatarStorageProperties) {
-        this.fileStorageLocation = Paths.get(avatarStorageProperties.getAvatar_name())
+    public FileService(@Qualifier("appComponentFactoryImpl") AppComponentFactory appComponentFactory) {
+        this.fileStorageLocation = Paths.get(appComponentFactory.getFileStoreAvatar())
                 .toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -84,6 +85,7 @@ public class FileService {
         logger.info("Load file as resource");
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+            System.out.println(filePath);
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
