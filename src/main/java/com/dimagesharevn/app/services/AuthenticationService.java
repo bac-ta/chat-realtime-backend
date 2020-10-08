@@ -11,6 +11,8 @@ import com.dimagesharevn.app.models.rests.request.LoginRequest;
 import com.dimagesharevn.app.models.rests.response.LoginResponse;
 import com.dimagesharevn.app.models.rests.response.SessionsResponse;
 import com.dimagesharevn.app.repositories.JWTRepository;
+import com.dimagesharevn.app.repositories.MessageArchiveRepository;
+import com.dimagesharevn.app.repositories.UserRepository;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -33,6 +35,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,16 +49,20 @@ public class AuthenticationService {
     private final JwtTokenProviderFactory jwtFactory;
     private final JWTRepository jwtRepository;
     private final AuthenticationManager authManager;
-
+    private UserRepository userRepository;
+    private MessageArchiveRepository messageArchive;
     private final OpenfireComponentFactory oFFactory;
 
     @Autowired
     public AuthenticationService(@Qualifier("jwtTokenProvider") JwtTokenProviderFactory jwtFactory, AuthenticationManager authManager,
-                                 JWTRepository jwtRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory) {
+                                 JWTRepository jwtRepository, @Qualifier("openfireComponentImpl") OpenfireComponentFactory oFFactory,
+                                 UserRepository userRepository,MessageArchiveRepository messageArchive) {
         this.jwtFactory = jwtFactory;
         this.authManager = authManager;
         this.jwtRepository = jwtRepository;
         this.oFFactory = oFFactory;
+        this.userRepository = userRepository;
+        this.messageArchive = messageArchive;
     }
 
     public LoginResponse login(LoginRequest req) {
@@ -119,6 +128,11 @@ public class AuthenticationService {
         //Delete session
         String username = jwtFactory.getUsernameFromJWT(jwt);
         RestTemplate template = new RestTemplate();
+
+        //get and update logout time
+        long localTime = System.currentTimeMillis();
+        userRepository.updateUserLogoutTime(localTime, username);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", oFFactory.getSecretKey());
         headers.setContentType(MediaType.APPLICATION_JSON);

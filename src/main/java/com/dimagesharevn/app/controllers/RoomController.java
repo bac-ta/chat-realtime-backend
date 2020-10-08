@@ -79,8 +79,20 @@ public class RoomController {
             @ApiResponse(code = 201, message = ""),
             @ApiResponse(code = 400, message = "")
     })
-    @GetMapping("/joined")
+    @GetMapping("/joinedList")
     public ResponseEntity<List<RoomResponse>> fetchRoomJoined() {
         return new ResponseEntity<>(roomService.fetchRoomList(), HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Room join API", notes = "Join a room exists")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = ""),
+            @ApiResponse(code = 400, message = "")
+    })
+    @PostMapping("/joined/{roomname}/{userRole}")
+    public ResponseEntity<Void> joinRoom(@PathVariable(name = "roomname") String roomname,
+                                         @PathVariable(name = "userRole") String userRole) {
+        roomService.joinChatRoom(roomname, userRole);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

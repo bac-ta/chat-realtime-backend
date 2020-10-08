@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class RosterDTO {
-    private List<RosterItemDTO> rosterItem;
+public class NumberMessageDTO {
+    private String username;
+    private Long offMessageNumber;
 }

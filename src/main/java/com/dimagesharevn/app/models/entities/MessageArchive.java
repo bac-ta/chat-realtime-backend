@@ -28,7 +28,5 @@ public class MessageArchive {
     private Long sentDate;
     @Column
     private String body;
-    @Column
-    private String stanza;
 
 }

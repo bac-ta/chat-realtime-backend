@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -66,13 +67,21 @@ public class RoomService {
 
     public void createChatRoom(ChatRoomRequest request) {
 
-        UUID roomName = UUID.randomUUID();
+        String uuid = String.format("%040d", new BigInteger(UUID.randomUUID().
+                toString().replace("-", ""), 16));
+
+        String roomName= uuid.substring(uuid.length() - 16);
 
         ChatRoomDTO chatRoomDTO = new ChatRoomDTO();
-        chatRoomDTO.setRoomName(roomName.toString());
+        chatRoomDTO.setRoomName(roomName);
 
         Set<String> members = request.getMembers().stream().map(member -> member + "@" + oFFactory.getXmppDomain())
                 .collect(Collectors.toSet());
+
+        AccountPrincipal accountPrincipal = authenticationService.getCurrentPrincipal();
+        String username = accountPrincipal.getUsername();
+        members.add(username + "@" + oFFactory.getXmppDomain());
+        
         chatRoomDTO.setMembers(members);
         chatRoomDTO.setNaturalName(request.getNaturalName());
 
@@ -93,6 +102,21 @@ public class RoomService {
         List<Room> rooms = roomRepository.findByRoomIDIn(roomIDs);
 
         return rooms.stream().map(room -> new RoomResponse(room.getRoomID(), room.getName(), room.getNaturalName())).collect(Collectors.toList());
+    }
+
+    public void joinChatRoom(String roomname, String userRole) {
+        RestTemplate template = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", oFFactory.getSecretKey());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<ChatRoomDTO> requestBody = new HttpEntity<>(headers);
+
+        AccountPrincipal accountPrincipal = authenticationService.getCurrentPrincipal();
+        String username = accountPrincipal.getUsername();
+
+        String userJid = username + "@" + oFFactory.getXmppDomain();
+        template.postForObject(oFFactory.getOpenfireRestApiEndPointBase() + "/chatrooms/" + roomname + "/" + userRole + "/" + userJid,
+                requestBody, Object.class);
     }
 
 }
