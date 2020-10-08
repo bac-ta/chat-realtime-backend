@@ -29,7 +29,7 @@ public class ProfileService {
         if(profileOptional.isPresent()){
             Profile profile = profileOptional.get();
             profile.setName(request.getName());
-            profile.setAvatar(request.getFilename());
+            profile.setAvatar(request.getAvatar());
             profile.setDescription((request.getDescription()));
             profileRepository.save(profile);
             return new ProfileResponse(APIMessage.UPDATE_PROFILE_SUCCESSFUL);
