@@ -9,16 +9,10 @@ public class MessageSpecification {
     }
 
     public static Specification<MessageArchive> hasToJID(String toJID) {
-        return (Specification<MessageArchive>) (root, criteriaQuery, criteriaBuilder) -> {
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("sentDate")));
-            return criteriaBuilder.equal(root.get("toJID"), toJID);
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("toJID"), toJID);
     }
 
     public static Specification<MessageArchive> hasSentDate(Long sentDate) {
-        return (Specification<MessageArchive>) (root, criteriaQuery, criteriaBuilder) -> {
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get("sentDate")));
-            return criteriaBuilder.lessThanOrEqualTo(root.get("sentDate"), sentDate);
-        };
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("sentDate"), sentDate);
     }
 }
