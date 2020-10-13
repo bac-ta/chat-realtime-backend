@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -83,17 +84,32 @@ public class ChatService {
     }
 
     public List<HistoryDTO> loadHistory(String userNameTo, Long sentDate) {
-        Pageable limit = PageRequest.of(0, 10);
+        Pageable limit = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "sentDate"));
         AccountPrincipal principal = authenticationService.getCurrentPrincipal();
         String userName = principal.getUsername();
         String fromJID = userName + "@" + oFFactory.getXmppDomain();
-        Specification conditions = Specification.where(hasFromJID(fromJID))
-                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()));
-        Specification conditionsSentDate = Specification.where(hasFromJID(fromJID))
-                .and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain()))
-                .and(hasSentDate(sentDate));
+
+        Specification<MessageArchive> conditions = Specification.where(
+                ((hasFromJID(fromJID)).and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain())))
+                        .or((hasFromJID(userNameTo + "@" + oFFactory.getXmppDomain())).and(hasToJID(fromJID)))
+        );
+
+        Specification<MessageArchive> conditionsSentDate = Specification.where(
+                ((hasFromJID(fromJID)).and(hasToJID(userNameTo + "@" + oFFactory.getXmppDomain())))
+                        .or((hasFromJID(userNameTo + "@" + oFFactory.getXmppDomain())).and(hasToJID(fromJID)))
+                        .and(hasSentDate(sentDate)));
+
         Page<MessageArchive> messageArchives = loadHistoryRepository.findAll(sentDate == null ? conditions : conditionsSentDate, limit);
-        return messageArchives.stream().map(messageArchive -> new HistoryDTO(messageArchive.getMessageID(), messageArchive.getConversationID(), messageArchive.getSentDate(), messageArchive.getBody())).collect(Collectors.toList());
+
+        return messageArchives.stream().map(messageArchive -> HistoryDTO.builder()
+                .messageID(messageArchive.getMessageID())
+                .conversationID(messageArchive.getConversationID())
+                .sentDate(messageArchive.getSentDate())
+                .userNameFrom(messageArchive.getFromJID())
+                .userNameTo(messageArchive.getToJID())
+                .body(messageArchive.getBody())
+                .build()
+        ).collect(Collectors.toList());
     }
 
     public List<NumberMessageDTO> loadNumMessOff() {
