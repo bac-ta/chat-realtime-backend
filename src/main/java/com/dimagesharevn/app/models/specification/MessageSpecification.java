@@ -13,6 +13,6 @@ public class MessageSpecification {
     }
 
     public static Specification<MessageArchive> hasSentDate(Long sentDate) {
-        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("sentDate"), sentDate);
+        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("sentDate"), sentDate);
     }
 }
